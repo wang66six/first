@@ -1,0 +1,116 @@
+/* ============ 政务深蓝主题 · 上海市大数据资源平台 ============ */
+:root {
+  /* 政务主色 */
+  --gov-blue: #1a4f9c;
+  --gov-blue-dark: #123a75;
+  --gov-blue-darker: #0c2c5c;
+  --gov-blue-light: #2d6bc4;
+  --gov-blue-lighter: #eaf1fb;
+  --gov-blue-bg: #f5f8fc;
+  /* 辅助色 */
+  --gov-gold: #d4a017;
+  --gov-red: #c0392b;
+  --gov-green: #1e8e4e;
+  --gov-orange: #e67e22;
+  /* 文字色 */
+  --text-primary: #1f2d3d;
+  --text-regular: #45546a;
+  --text-secondary: #8492a6;
+  /* 边框与阴影 */
+  --border-color: #dce3ed;
+  --card-shadow: 0 2px 8px rgba(18, 58, 117, 0.08);
+  --card-shadow-hover: 0 8px 24px rgba(18, 58, 117, 0.16);
+
+  /* Element Plus 主题覆写 */
+  --el-color-primary: var(--gov-blue);
+  --el-color-primary-light-3: #4a77bd;
+  --el-color-primary-light-5: #7a9cd0;
+  --el-color-primary-light-7: #aac1e2;
+  --el-color-primary-light-8: #c3d3ea;
+  --el-color-primary-light-9: var(--gov-blue-lighter);
+  --el-color-primary-dark-2: var(--gov-blue-dark);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #app { height: 100%; }
+
+body {
+  font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+  color: var(--text-primary);
+  background: var(--gov-blue-bg);
+  font-size: 14px;
+  min-width: 1366px;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { text-decoration: none; color: inherit; }
+
+/* ============ 通用工具类 ============ */
+.gov-card {
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: var(--card-shadow);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.gov-card--hover:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-4px);
+  cursor: pointer;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title::before {
+  content: '';
+  width: 4px;
+  height: 18px;
+  border-radius: 2px;
+  background: var(--gov-blue);
+}
+
+.clickable { cursor: pointer; }
+.clickable:hover { color: var(--gov-blue); }
+
+/* 页面切换淡入过渡 */
+.fade-enter-active { transition: opacity 0.25s ease; }
+.fade-enter-from { opacity: 0; }
+.fade-leave-active { transition: opacity 0.15s ease; }
+.fade-leave-to { opacity: 0; }
+
+/* 数字滚动指标 */
+.metric-num {
+  font-family: 'DIN Alternate', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 700;
+  color: var(--gov-blue);
+}
+
+/* 滚动条 */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: #c3d3ea; border-radius: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* Element Plus 局部微调 */
+.el-table th.el-table__cell {
+  background: var(--gov-blue-lighter) !important;
+  color: var(--gov-blue-dark);
+  font-weight: 600;
+}
+.el-pagination { justify-content: flex-end; margin-top: 16px; }
+
+/* 通用页面容器 */
+.page-container { padding: 16px 20px; }
+.toolbar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.toolbar-row .spacer { flex: 1; }
