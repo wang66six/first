@@ -371,18 +371,30 @@ export const myMessages = [
 ]
 
 /* ---------- 委办工作台 ---------- */
+// 统一待办-我的消息：审批/系统/额度等各类通知
+export const wbMessages = [
+  { id: 1, type: '审批通知', title: '您的「企业信用报告产品申请」已审批通过', time: '2026-07-27 10:20', read: false },
+  { id: 2, type: '工单提醒', title: '工单 GD-20260727001 已分派至您的科室，请及时处理', time: '2026-07-27 09:18', read: false },
+  { id: 3, type: '审批通知', title: '您的「不动产登记信息用数申请」被驳回，请补充材料', time: '2026-07-26 15:35', read: false },
+  { id: 4, type: '供需通知', title: '「账号申请」需求已受理，运营方预计 3 个工作日内反馈', time: '2026-07-26 11:02', read: true },
+  { id: 5, type: '系统通知', title: '平台将于 7 月 28 日 00:00-06:00 进行例行维护', time: '2026-07-25 10:00', read: true },
+  { id: 6, type: '额度提醒', title: '「交通出行指数」本月调用量已达配额 80%', time: '2026-07-24 08:30', read: true },
+  { id: 7, type: '供需通知', title: '「接口上限调整」需求已完成，新配额已生效', time: '2026-07-23 16:45', read: true },
+  { id: 8, type: '系统通知', title: '数据目录挂载质量月报（6 月）已生成，可前往查看', time: '2026-07-22 09:00', read: true }
+]
+
 // 统一待办：服务单/需求单/工单/三清单 四类单据汇总
 export const unifiedTodos = [
-  { id: 'GD-20260727001', type: '服务单', submitter: '李想', time: '2026-07-27 09:15', status: '待处理' },
-  { id: 'GD-20260726154', type: '需求单', submitter: '王维嘉', time: '2026-07-26 16:40', status: '处理中' },
-  { id: 'GD-20260726082', type: '工单', submitter: '系统自动发起', time: '2026-07-26 08:00', status: '已完成' },
-  { id: 'GD-20260725110', type: '三清单', submitter: '赵小敏', time: '2026-07-25 11:30', status: '待处理' },
-  { id: 'GD-20260725067', type: '服务单', submitter: '陈嘉伟', time: '2026-07-25 09:45', status: '处理中' },
-  { id: 'GD-20260724021', type: '需求单', submitter: '孙丽华', time: '2026-07-24 14:20', status: '待处理' },
-  { id: 'GD-20260723093', type: '工单', submitter: '周建平', time: '2026-07-23 10:05', status: '已完成' },
-  { id: 'GD-20260722045', type: '三清单', submitter: '吴雅婷', time: '2026-07-22 15:50', status: '处理中' },
-  { id: 'GD-20260721078', type: '其他类型', submitter: '林志强', time: '2026-07-21 16:25', status: '处理中' },
-  { id: 'GD-20260720036', type: '其他类型', submitter: '许文娟', time: '2026-07-20 09:40', status: '已完成' }
+  { id: 'GD-20260727001', title: '政务云资源扩容服务申请', type: '服务单', submitter: '李想', time: '2026-07-27 09:15', status: '待处理' },
+  { id: 'GD-20260726154', title: '人口基础信息共享需求确认', type: '需求单', submitter: '王维嘉', time: '2026-07-26 16:40', status: '处理中' },
+  { id: 'GD-20260726082', title: '数据接口调用异常自动巡检', type: '工单', submitter: '系统自动发起', time: '2026-07-26 08:00', status: '已完成' },
+  { id: 'GD-20260725110', title: '公共数据责任清单季度更新', type: '三清单', submitter: '赵小敏', time: '2026-07-25 11:30', status: '待处理' },
+  { id: 'GD-20260725067', title: '电子证照核验服务开通', type: '服务单', submitter: '陈嘉伟', time: '2026-07-25 09:45', status: '处理中' },
+  { id: 'GD-20260724021', title: '企业信用数据回流需求评审', type: '需求单', submitter: '孙丽华', time: '2026-07-24 14:20', status: '待处理' },
+  { id: 'GD-20260723093', title: '前置机磁盘空间告警处置', type: '工单', submitter: '周建平', time: '2026-07-23 10:05', status: '已完成' },
+  { id: 'GD-20260722045', title: '数据需求清单补充报送', type: '三清单', submitter: '吴雅婷', time: '2026-07-22 15:50', status: '处理中' },
+  { id: 'GD-20260721078', title: '数据安全培训材料确认', type: '其他类型', submitter: '林志强', time: '2026-07-21 16:25', status: '处理中' },
+  { id: 'GD-20260720036', title: '平台账号年度审计确认', type: '其他类型', submitter: '许文娟', time: '2026-07-20 09:40', status: '已完成' }
 ]
 
 // 工作台首页数据看板：数据融合 / 用数情况 / 供数情况（按五级库分布）
@@ -452,6 +464,212 @@ export const wbSupplyBoard = {
     { code: '002421001/000041', name: '绿化绿容局信用数据错误反馈', items: '备注,主键,错误信息描述,数据id,时间戳,反馈', shareType: '无条件共享', pubStatus: '已发布', linkStatus: '已挂接', count: 6 }
   ]
 }
+
+/* ---------- 治理部工作台首页看板：账号统计 / 资源情况 / 数据目录 / 运维监控 ---------- */
+// 账号数据统计
+export const govAccountStats = [
+  { label: '单位总数', value: 168, unit: '个', icon: 'OfficeBuilding', bg: '#e8f2fd', color: '#2563c9' },
+  { label: '当前用户总数', value: 2453, unit: '人', icon: 'User', bg: '#e8f8ee', color: '#22a35c' },
+  { label: '当日登录数', value: 386, unit: '人次', icon: 'Key', bg: '#fff3e5', color: '#f2711c' },
+  { label: '不活跃账号数', value: 47, unit: '个', icon: 'WarnTriangleFilled', bg: '#fdeeee', color: '#d9534f' }
+]
+
+// 登录情况统计-当日分时访问人数（00:00 ~ 16:00）
+export const govLoginHourly = {
+  categories: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'],
+  values: [0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 2, 1, 0, 3, 3, 3]
+}
+
+// 登录情况统计-近 30 天访问人数
+export const govLogin30d = {
+  categories: ['06-21', '06-22', '06-23', '06-24', '06-25', '06-26', '06-27', '06-28', '06-29', '06-30', '07-01', '07-02', '07-03', '07-04', '07-05', '07-06', '07-07', '07-08', '07-09', '07-10', '07-11', '07-12', '07-13', '07-14', '07-15', '07-16', '07-17', '07-18', '07-19', '07-20'],
+  values: [0, 5, 6, 3, 4, 4, 4, 2, 2, 2, 3, 2, 3, 0, 0, 5, 4, 7, 6, 4, 0, 2, 2, 1, 3, 4, 4, 1, 0, 6]
+}
+
+// 不活跃账号清单（连续未登录超过 30 天）
+export const govInactiveAccounts = [
+  { name: '钱学明', dept: '市水务局', lastLogin: '2026-06-18', dormantDays: 39 },
+  { name: '孙丽华', dept: '市市场监督管理局', lastLogin: '2026-06-10', dormantDays: 47 },
+  { name: '李文博', dept: '市体育局', lastLogin: '2026-05-28', dormantDays: 60 },
+  { name: '张伟东', dept: '市文化和旅游局', lastLogin: '2026-05-15', dormantDays: 73 },
+  { name: '王建国', dept: '市国资委', lastLogin: '2026-04-30', dormantDays: 88 },
+  { name: '赵国庆', dept: '市民政局', lastLogin: '2026-04-20', dormantDays: 98 },
+  { name: '周建军', dept: '市交通委', lastLogin: '2026-03-25', dormantDays: 124 },
+  { name: '吴晓燕', dept: '市卫生健康委', lastLogin: '2026-03-08', dormantDays: 141 },
+  { name: '郑海涛', dept: '市统计局', lastLogin: '2026-02-22', dormantDays: 156 },
+  { name: '冯军', dept: '市审计局', lastLogin: '2026-01-15', dormantDays: 194 },
+  { name: '褚红梅', dept: '市公积金管理中心', lastLogin: '2025-12-28', dormantDays: 212 },
+  { name: '陈志强', dept: '市司法局', lastLogin: '2025-12-10', dormantDays: 230 }
+]
+
+/* ---------- 治理部工作台-资源情况 ---------- */
+// 底座情况（联通/电信/移动 三底座）
+export const govBaseStats = [
+  { name: '底座 1：联通（阿里）', total: 1024, used: 665, weekAdd: 28, cpu: 42, memory: 73 },
+  { name: '底座 2：电信（华为）', total: 2048, used: 982, weekAdd: 41, cpu: 68, memory: 56 },
+  { name: '底座 3：移动（星环）', total: 1536, used: 1213, weekAdd: 35, cpu: 51, memory: 82 }
+]
+
+// 资产情况-汇总卡
+export const govAssetSummary = [
+  { label: '数据库总数', value: '156', unit: '', weekAdd: '8', icon: 'Coin', bg: '#e6f4ff', color: '#2f9cf4' },
+  { label: '数据表总数', value: '12,458', unit: '', weekAdd: '326', icon: 'Grid', bg: '#e8f8ee', color: '#22a35c' },
+  { label: '总存储用量', value: '2,860', unit: 'TB', weekAdd: '104 TB', icon: 'Coin', bg: '#fff3e5', color: '#f2711c' },
+  { label: '数据总量', value: '1.8', unit: 'PB', weekAdd: '0.04 PB', icon: 'DataBoard', bg: '#f1edfc', color: '#7c5cd6' }
+]
+
+// 资产情况-各底座明细
+export const govAssetByBase = [
+  { name: '联通（阿里）', tag: '底座 1', dbCount: '52', dbAdd: '3', tableCount: '4,128', tableAdd: '105', storage: '665', storageUnit: 'TB', storageAdd: '28 TB' },
+  { name: '电信（华为）', tag: '底座 2', dbCount: '64', dbAdd: '3', tableCount: '5,263', tableAdd: '142', storage: '982', storageUnit: 'TB', storageAdd: '41 TB' },
+  { name: '移动（星环）', tag: '底座 3', dbCount: '40', dbAdd: '2', tableCount: '3,067', tableAdd: '79', storage: '1213', storageUnit: 'TB', storageAdd: '35 TB' }
+]
+
+// 前置机统计（支持按单位筛选）
+export const govFrontMachines = [
+  { dept: '市公安局', total: 18, used: 15 },
+  { dept: '市规划资源局', total: 14, used: 9 },
+  { dept: '市卫生健康委', total: 16, used: 13 },
+  { dept: '市市场监管局', total: 12, used: 7 },
+  { dept: '市交通委', total: 10, used: 8 },
+  { dept: '市民政局', total: 8, used: 5 },
+  { dept: '市教卫工作党委、市教委', total: 15, used: 11 },
+  { dept: '市水务局', total: 9, used: 6 },
+  { dept: '市统计局', total: 7, used: 4 },
+  { dept: '市医疗保障局', total: 11, used: 9 }
+]
+
+// 前置机列表（单台明细，支持分页）
+export const govFrontMachineList = [
+  { name: 'GAJ-FEP-01', ip: '10.208.12.11', dept: '市公安局', usage: '数据交换', cpu: 62, memory: 71, status: '在线' },
+  { name: 'GAJ-FEP-02', ip: '10.208.12.12', dept: '市公安局', usage: '接口服务', cpu: 45, memory: 58, status: '在线' },
+  { name: 'GHZY-FEP-01', ip: '10.208.14.21', dept: '市规划资源局', usage: '数据归集', cpu: 38, memory: 52, status: '在线' },
+  { name: 'GHZY-FEP-02', ip: '10.208.14.22', dept: '市规划资源局', usage: '文件传输', cpu: 12, memory: 30, status: '离线' },
+  { name: 'WSJK-FEP-01', ip: '10.208.16.31', dept: '市卫生健康委', usage: '数据交换', cpu: 74, memory: 82, status: '在线' },
+  { name: 'WSJK-FEP-02', ip: '10.208.16.32', dept: '市卫生健康委', usage: '接口服务', cpu: 55, memory: 63, status: '在线' },
+  { name: 'SCJG-FEP-01', ip: '10.208.18.41', dept: '市市场监管局', usage: '数据归集', cpu: 41, memory: 49, status: '在线' },
+  { name: 'SCJG-FEP-02', ip: '10.208.18.42', dept: '市市场监管局', usage: '文件传输', cpu: 8, memory: 22, status: '离线' },
+  { name: 'JTW-FEP-01', ip: '10.208.20.51', dept: '市交通委', usage: '数据交换', cpu: 66, memory: 70, status: '在线' },
+  { name: 'JTW-FEP-02', ip: '10.208.20.52', dept: '市交通委', usage: '接口服务', cpu: 52, memory: 60, status: '在线' },
+  { name: 'MZJ-FEP-01', ip: '10.208.22.61', dept: '市民政局', usage: '数据归集', cpu: 33, memory: 44, status: '在线' },
+  { name: 'MZJ-FEP-02', ip: '10.208.22.62', dept: '市民政局', usage: '文件传输', cpu: 47, memory: 55, status: '在线' },
+  { name: 'JW-FEP-01', ip: '10.208.24.71', dept: '市教卫工作党委、市教委', usage: '数据交换', cpu: 58, memory: 67, status: '在线' },
+  { name: 'JW-FEP-02', ip: '10.208.24.72', dept: '市教卫工作党委、市教委', usage: '接口服务', cpu: 61, memory: 73, status: '在线' },
+  { name: 'SWJ-FEP-01', ip: '10.208.26.81', dept: '市水务局', usage: '数据归集', cpu: 29, memory: 41, status: '在线' },
+  { name: 'SWJ-FEP-02', ip: '10.208.26.82', dept: '市水务局', usage: '文件传输', cpu: 15, memory: 28, status: '离线' },
+  { name: 'TJJ-FEP-01', ip: '10.208.28.91', dept: '市统计局', usage: '数据交换', cpu: 44, memory: 51, status: '在线' },
+  { name: 'TJJ-FEP-02', ip: '10.208.28.92', dept: '市统计局', usage: '接口服务', cpu: 37, memory: 46, status: '在线' },
+  { name: 'YLBZ-FEP-01', ip: '10.208.30.101', dept: '市医疗保障局', usage: '数据归集', cpu: 69, memory: 78, status: '在线' },
+  { name: 'YLBZ-FEP-02', ip: '10.208.30.102', dept: '市医疗保障局', usage: '文件传输', cpu: 53, memory: 62, status: '在线' },
+  { name: 'GAJ-FEP-03', ip: '10.208.12.13', dept: '市公安局', usage: '数据归集', cpu: 48, memory: 57, status: '在线' },
+  { name: 'WSJK-FEP-03', ip: '10.208.16.33', dept: '市卫生健康委', usage: '文件传输', cpu: 22, memory: 35, status: '在线' },
+  { name: 'JTW-FEP-03', ip: '10.208.20.53', dept: '市交通委', usage: '数据归集', cpu: 39, memory: 48, status: '在线' },
+  { name: 'JW-FEP-03', ip: '10.208.24.73', dept: '市教卫工作党委、市教委', usage: '文件传输', cpu: 18, memory: 31, status: '离线' }
+]
+
+/* ---------- 治理部工作台-数据目录 ---------- */
+// 数据上链情况-汇总卡
+export const govChainStats = [
+  { label: '职责目录数', value: '203,363', icon: 'OfficeBuilding', bg: '#e8f2fd', color: '#2563c9' },
+  { label: '系统目录数', value: '3,422', icon: 'Menu', bg: '#e8f8ee', color: '#22a35c' },
+  { label: '数据目录数', value: '33,452', icon: 'Files', bg: '#fff3e5', color: '#f2711c' },
+  { label: '上链单位数', value: '98', icon: 'OfficeBuilding', bg: '#e8f2fd', color: '#2563c9' }
+]
+
+// 数据上链情况-完备率
+export const govChainRates = [
+  { label: '职责目录完备率', value: 96.5 },
+  { label: '系统目录完备率', value: 84.81 },
+  { label: '数据目录完备率', value: 90.9 },
+  { label: '数据目录挂载率', value: 75.73 }
+]
+
+// 数据归集情况
+export const govCollectStats = {
+  lake: '3,255.06',
+  pool: '1,586.29',
+  structured: '384',
+  unstructured: '42.9',
+  apiCalls: '512.66'
+}
+
+// 42 家市级委办数据目录数 TOP5
+export const govCatalogByCommission = [
+  { name: '上海市住房和城乡建设管理委员会', value: 1498 },
+  { name: '上海市教育委员会', value: 1006 },
+  { name: '上海规划和自然资源局', value: 673 },
+  { name: '上海市交通委员会', value: 615 },
+  { name: '上海市生态环境局', value: 463 }
+]
+
+// 16 个区数据目录数 TOP5
+export const govCatalogByDistrict = [
+  { name: '上海市奉贤区人民政府', value: 1644 },
+  { name: '上海市松江区人民政府', value: 1179 },
+  { name: '上海市嘉定区人民政府', value: 1169 },
+  { name: '上海市闵行区人民政府', value: 1145 },
+  { name: '上海市黄浦区人民政府', value: 1004 }
+]
+
+// 数据停更情况-高级筛选计数
+export const govStopFilters = {
+  share: [
+    { label: '全部', count: 1631 },
+    { label: '无条件共享', count: 1066 },
+    { label: '有条件共享', count: 391 },
+    { label: '不共享', count: 167 }
+  ],
+  open: [
+    { label: '全部', count: 1631 },
+    { label: '可对社会开放', count: 795 },
+    { label: '不可对社会开放', count: 688 },
+    { label: '部分对社会开放', count: 148 }
+  ],
+  mount: [
+    { label: '全部', count: 1631 },
+    { label: '已挂载', count: 265 },
+    { label: '未挂载', count: 1366 }
+  ],
+  resource: [
+    { label: '全部', count: 1631 },
+    { label: '文件', count: 0 },
+    { label: '库表', count: 212 },
+    { label: '接口', count: 33 },
+    { label: '消息队列', count: 0 }
+  ],
+  status: [
+    { label: '全部', count: 1631 },
+    { label: '正常', count: 1600 },
+    { label: '停更', count: 31 }
+  ]
+}
+
+// 数据停更情况-清单
+export const govStopUpdateList = [
+  { code: '002438161/000472', name: '区人口目录', dept: '上海市奉贤区人民政府', freq: '年', lastUpdate: '2025-07-01 14:32:26', stopDays: 21 },
+  { code: '002438161/000473', name: '法人单位基础信息', dept: '上海市松江区人民政府', freq: '月', lastUpdate: '2025-06-18 09:12:04', stopDays: 34 },
+  { code: '002438161/000474', name: '市场主体登记目录', dept: '上海市市场监督管理局', freq: '周', lastUpdate: '2025-06-05 16:45:31', stopDays: 47 },
+  { code: '002438161/000475', name: '医疗机构资质目录', dept: '上海市卫生健康委员会', freq: '季', lastUpdate: '2025-05-22 11:08:57', stopDays: 61 },
+  { code: '002438161/000476', name: '不动产登记信息', dept: '上海市规划和自然资源局', freq: '日', lastUpdate: '2025-05-10 08:30:12', stopDays: 73 },
+  { code: '002438161/000477', name: '交通违法处理目录', dept: '上海市公安局', freq: '日', lastUpdate: '2025-04-28 19:22:40', stopDays: 85 },
+  { code: '002438161/000478', name: '社会保障参保信息', dept: '上海市人力资源和社会保障局', freq: '月', lastUpdate: '2025-04-15 13:55:18', stopDays: 98 },
+  { code: '002438161/000479', name: '中小学学籍目录', dept: '上海市教育委员会', freq: '年', lastUpdate: '2025-04-02 10:41:36', stopDays: 111 },
+  { code: '002438161/000480', name: '生态环境监测目录', dept: '上海市生态环境局', freq: '日', lastUpdate: '2025-03-20 15:17:09', stopDays: 124 },
+  { code: '002438161/000481', name: '公共交通线路目录', dept: '上海市交通委员会', freq: '月', lastUpdate: '2025-03-08 09:33:52', stopDays: 136 },
+  { code: '002438161/000482', name: '养老机构备案目录', dept: '上海市民政局', freq: '季', lastUpdate: '2025-02-24 14:06:27', stopDays: 148 },
+  { code: '002438161/000483', name: '水务设施运行目录', dept: '上海市水务局', freq: '周', lastUpdate: '2025-02-11 11:29:44', stopDays: 161 },
+  { code: '002438161/000484', name: '统计年报数据目录', dept: '上海市统计局', freq: '年', lastUpdate: '2025-01-28 16:52:03', stopDays: 175 },
+  { code: '002438161/000485', name: '医保结算明细目录', dept: '上海市医疗保障局', freq: '日', lastUpdate: '2025-01-15 08:14:38', stopDays: 188 },
+  { code: '002438161/000486', name: '文化场馆预约目录', dept: '上海市文化和旅游局', freq: '月', lastUpdate: '2025-01-03 10:47:21', stopDays: 200 },
+  { code: '002438161/000487', name: '体育赛事活动目录', dept: '上海市体育局', freq: '季', lastUpdate: '2024-12-20 15:38:55', stopDays: 214 },
+  { code: '002438161/000488', name: '国资企业名录目录', dept: '上海市国资委', freq: '年', lastUpdate: '2024-12-08 09:26:12', stopDays: 226 },
+  { code: '002438161/000489', name: '司法鉴定机构目录', dept: '上海市司法局', freq: '季', lastUpdate: '2024-11-25 14:03:49', stopDays: 239 },
+  { code: '002438161/000490', name: '审计项目备案目录', dept: '上海市审计局', freq: '年', lastUpdate: '2024-11-12 11:50:07', stopDays: 252 },
+  { code: '002438161/000491', name: '公积金缴存目录', dept: '上海市公积金管理中心', freq: '月', lastUpdate: '2024-10-30 16:22:33', stopDays: 265 },
+  { code: '002438161/000492', name: '区人口目录', dept: '上海市嘉定区人民政府', freq: '年', lastUpdate: '2024-10-18 09:11:58', stopDays: 277 },
+  { code: '002438161/000493', name: '区法人目录', dept: '上海市闵行区人民政府', freq: '月', lastUpdate: '2024-10-05 13:44:26', stopDays: 290 },
+  { code: '002438161/000494', name: '区空间地理目录', dept: '上海市黄浦区人民政府', freq: '季', lastUpdate: '2024-09-22 15:09:41', stopDays: 303 }
+]
 
 export const commissionTickets = [
   { id: 'WO20260722001', title: '法人库7月增量数据挂载异常整改', type: '数据整改', priority: '紧急', status: '待处理', createTime: '2026-07-22 09:10', deadline: '2026-07-25' },
@@ -656,3 +874,31 @@ export const opsTickets = [
 ]
 
 export { DEPTS, TOPICS, TAGS }
+
+// ==================== 服务商工作台：归集 / 清洗 / 共享任务看板 ====================
+// 任务列表统一结构：任务编号 / 名称 / 来源单位 / 责任人(仅姓氏) / 进度 / 计划完成 / 状态
+const _provSources = ['市市场监管局', '市公安局', '市卫生健康委', '市交通委', '市规划和自然资源局', '市教委', '市人力资源社会保障局', '市医保局', '浦东新区', '市生态环境局']
+const _provOwners = ['王', '李', '陈', '赵', '孙', '周', '吴', '郑', '钱', '冯']
+function genProviderTasks(prefix, verb, count) {
+  const list = []
+  for (let i = 1; i <= count; i++) {
+    const status = i % 5 === 0 ? '待开始' : i % 3 === 0 ? '进行中' : '已完成'
+    const progress = status === '已完成' ? 100 : status === '待开始' ? 0 : 30 + ((i * 7) % 60)
+    const src = _provSources[i % _provSources.length]
+    list.push({
+      taskNo: `${prefix}2026${String(i).padStart(4, '0')}`,
+      name: `${src}${verb}任务`,
+      source: src,
+      owner: _provOwners[i % _provOwners.length],
+      progress,
+      plan: `2026-08-${String((i % 28) + 1).padStart(2, '0')}`,
+      status
+    })
+  }
+  return list
+}
+export const providerTaskBoards = {
+  collect: { label: '归集任务', list: genProviderTasks('GJ', '数据归集', 34) },
+  clean: { label: '清洗任务', list: genProviderTasks('QX', '数据清洗', 28) },
+  share: { label: '共享任务', list: genProviderTasks('GX', '数据共享', 22) }
+}

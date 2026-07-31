@@ -3,7 +3,7 @@
     <div class="gov-card cfp-card">
       <div class="cfp-icon"><el-icon :size="36"><Files /></el-icon></div>
       <h2 class="cfp-title">{{ $route.meta.title }}</h2>
-      <p class="cfp-desc">该功能模块正在建设中，敬请期待</p>
+      <p class="cfp-desc">{{ $route.meta.pending ? '该功能正在接入中，敬请期待' : '该功能模块正在建设中，敬请期待' }}</p>
       <el-button type="primary" plain @click="router.push(base)">返回工作台首页</el-button>
     </div>
   </div>

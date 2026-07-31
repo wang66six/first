@@ -22,12 +22,26 @@ export const ROLE_WORKBENCHES = {
   provider: { label: '服务商工作台', path: '/workbench/provider' }
 }
 
+/**
+ * 各工作台（角色）对应的单位/科室/联系人档案。
+ * 用户可同时拥有多个角色，切换工作台时应展示对应工作台的单位与科室，
+ * 因此以此表按 workbench 标识查询，而非固定使用登录时的主角色档案。
+ */
+export const WORKBENCH_PROFILES = {
+  governance: { name: '王', dept: '大数据中心', office: '数据治理部' },
+  commission: { name: '李', dept: '市规划和自然资源局', office: '局办公室' },
+  district: { name: '陈', dept: '浦东新区大数据中心', office: '数据管理科' },
+  provider: { name: '赵', dept: '数慧科技服务有限公司', office: '交付服务部' }
+}
+
 export const useUserStore = defineStore('user', {
   state: () => ({
     token: sessionStorage.getItem('dh_token') || '',
     roles: JSON.parse(sessionStorage.getItem('dh_roles') || '[]'),
     name: sessionStorage.getItem('dh_name') || '',
     dept: sessionStorage.getItem('dh_dept') || '',
+    // 所属科室/处室，用于工作台侧栏展示
+    office: sessionStorage.getItem('dh_office') || '局办公室',
     loginTime: sessionStorage.getItem('dh_login_time') || '',
     loginIp: sessionStorage.getItem('dh_login_ip') || '',
     cart: JSON.parse(sessionStorage.getItem('dh_cart') || '[]')
@@ -46,17 +60,12 @@ export const useUserStore = defineStore('user', {
     // roles 为角色数组，档案按主角色（首位）取
     login(roles) {
       const list = Array.isArray(roles) ? roles : [roles]
-      const profiles = {
-        governance: { name: '王治理', dept: '市数据局治理部' },
-        commission: { name: '李建华', dept: '市规划和自然资源局' },
-        district: { name: '陈晓峰', dept: '浦东新区大数据中心' },
-        provider: { name: '赵明轩', dept: '数慧科技服务有限公司' }
-      }
-      const p = profiles[list[0]] || profiles.commission
+      const p = WORKBENCH_PROFILES[list[0]] || WORKBENCH_PROFILES.commission
       this.token = `mock-token-${Date.now()}`
       this.roles = list
       this.name = p.name
       this.dept = p.dept
+      this.office = p.office
       // 记录本次登录时间与来源 IP（演示环境 IP 为模拟政务内网地址）
       this.loginTime = new Date().toLocaleString('zh-CN', {
         year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false
@@ -66,6 +75,7 @@ export const useUserStore = defineStore('user', {
       sessionStorage.setItem('dh_roles', JSON.stringify(list))
       sessionStorage.setItem('dh_name', p.name)
       sessionStorage.setItem('dh_dept', p.dept)
+      sessionStorage.setItem('dh_office', p.office)
       sessionStorage.setItem('dh_login_time', this.loginTime)
       sessionStorage.setItem('dh_login_ip', this.loginIp)
     },
@@ -74,6 +84,7 @@ export const useUserStore = defineStore('user', {
       this.roles = []
       this.name = ''
       this.dept = ''
+      this.office = ''
       this.loginTime = ''
       this.loginIp = ''
       sessionStorage.clear()

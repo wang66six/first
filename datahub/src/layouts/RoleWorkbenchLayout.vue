@@ -12,7 +12,7 @@
           <span class="cwb-online-dot"></span>
         </div>
         <p class="cwb-user-name">{{ user.name }}</p>
-        <p class="cwb-user-dept">{{ user.dept }}</p>
+        <p class="cwb-user-dept">{{ wbName }}</p>
       </div>
 
       <nav class="cwb-menu">
@@ -31,13 +31,32 @@
               <div
                 v-for="m in g.items"
                 :key="m.label"
-                class="cwb-menu-item"
-                :class="{ active: isActive(m), danger: m.danger }"
-                @click="onMenu(m)"
               >
-                <el-icon><component :is="m.icon" /></el-icon>
-                <span>{{ m.label }}</span>
-                <em v-if="m.label === '首页' && pendingCount" class="cwb-badge">{{ pendingCount }}</em>
+                <div
+                  class="cwb-menu-item"
+                  :class="{ active: isActive(m), danger: m.danger }"
+                  @click="onMenu(m)"
+                >
+                  <el-icon><component :is="m.icon" /></el-icon>
+                  <span>{{ m.label }}</span>
+                  <em v-if="m.label === '统一待办' && pendingCount" class="cwb-badge">{{ pendingCount }}</em>
+                  <el-icon v-if="m.children" class="cwb-sub-arrow" :class="{ folded: subCollapsed[m.label] }"><ArrowDown /></el-icon>
+                </div>
+                <!-- 二级子菜单 -->
+                <el-collapse-transition v-if="m.children">
+                  <div v-show="!subCollapsed[m.label]" class="cwb-submenu">
+                    <div
+                      v-for="c in m.children"
+                      :key="c.label"
+                      class="cwb-submenu-item"
+                      :class="{ active: route.path === c.path }"
+                      @click="router.push(c.path)"
+                    >
+                      <span class="cwb-submenu-dot"></span>
+                      <span>{{ c.label }}</span>
+                    </div>
+                  </div>
+                </el-collapse-transition>
               </div>
             </div>
           </el-collapse-transition>
@@ -67,13 +86,14 @@ import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useUserStore } from '@/store/user'
 import { unifiedTodos } from '@/mock'
+import { getWorkbenchMenuGroups } from '@/config/workbenchMenus'
 import TopNavbar from '@/components/TopNavbar.vue'
 
 const route = useRoute()
 const router = useRouter()
 const user = useUserStore()
 
-// 首页角标：统一待办中待处理的单据数
+// 统一待办角标：待处理的单据数
 const pendingCount = unifiedTodos.filter((t) => t.status === '待处理').length
 
 // 当前工作台标识（commission / governance / district / provider），从匹配路由 meta 派生
@@ -85,67 +105,23 @@ const workbench = computed(() => {
 })
 const base = computed(() => `/workbench/${workbench.value}`)
 
-// 分组菜单：路径以当前工作台 base 为前缀，四类工作台结构完全一致
-const menuGroups = computed(() => {
-  const b = base.value
-  return [
-    {
-      items: [
-        { label: '首页', icon: 'HomeFilled', path: b },
-        { label: '统一待办', icon: 'Document', path: `${b}/todo` },
-        { label: '我的收藏', icon: 'Star', path: `${b}/favorites` }
-      ]
-    },
-    {
-      title: '运营中心',
-      collapsible: true,
-      items: [
-        { label: '运营过程管理', icon: 'SetUp', path: `${b}/operation` },
-        { label: '智能运维', icon: 'Tools', path: `${b}/ops` },
-        { label: '统一元数据管理', icon: 'Collection', path: `${b}/metadata` },
-        { label: '数据编制', icon: 'EditPen', path: `${b}/data-compile` },
-        { label: '统一资源管理', icon: 'Coin', path: `${b}/resource` },
-        { label: '前置机管理', icon: 'Monitor', path: `${b}/front-machine` }
-      ]
-    },
-    {
-      title: '开发中心',
-      collapsible: true,
-      items: [
-        { label: '统一工具', icon: 'Box', path: `${b}/dev-tools` },
-        { label: '三合一治理', icon: 'Operation', path: `${b}/tri-governance` },
-        { label: '统一服务总线', icon: 'Connection', path: `${b}/service-bus` }
-      ]
-    },
-    {
-      title: '安全中心',
-      collapsible: true,
-      items: [
-        { label: '安全控制中心', icon: 'Lock', path: `${b}/security-control` }
-      ]
-    },
-    {
-      title: '其他',
-      collapsible: true,
-      items: [
-        { label: '数据共享', icon: 'Share', path: `${b}/data-share` },
-        { label: '数据开放', icon: 'FolderOpened', path: `${b}/data-open` },
-        { label: '授权运营', icon: 'Stamp', path: `${b}/authorized-operation` }
-      ]
-    },
-    {
-      title: '系统设置',
-      items: [
-        { label: '个人资料', icon: 'User', path: `${b}/profile` },
-        { label: '退出登录', icon: 'SwitchButton', danger: true }
-      ]
-    }
-  ]
+// 工作台类型名称（委办工作台/治理部工作台/区工作台/服务商工作台），用于侧栏用户区展示
+const wbName = computed(() => {
+  for (let i = route.matched.length - 1; i >= 0; i--) {
+    if (route.matched[i].meta?.wbName) return route.matched[i].meta.wbName
+  }
+  return '委办工作台'
 })
+
+// 分组菜单：路径以当前工作台 base 为前缀，四类工作台结构完全一致（结构定义收敛在共享配置中）
+const menuGroups = computed(() => getWorkbenchMenuGroups(base.value, workbench.value))
 
 function isActive(m) {
   if (!m.path) return false
-  return m.path === base.value ? route.path === m.path : route.path.startsWith(m.path)
+  if (m.path === base.value) return route.path === m.path
+  // 含子菜单的父项仅在自身页面高亮，子页面由子菜单项高亮
+  if (m.children) return route.path === m.path
+  return route.path.startsWith(m.path)
 }
 
 // 分组折叠状态（默认展开）
@@ -154,6 +130,9 @@ function toggleGroup(title) {
   collapsed[title] = !collapsed[title]
 }
 
+// 二级子菜单折叠状态（默认展开）
+const subCollapsed = reactive({})
+
 function onMenu(m) {
   if (m.danger) {
     ElMessageBox.confirm('确定退出登录吗？', '提示', { type: 'warning' }).then(() => {
@@ -161,6 +140,11 @@ function onMenu(m) {
       ElMessage.success('已退出登录')
       router.push('/login')
     }).catch(() => {})
+    return
+  }
+  // 含子菜单的父项：仅切换展开状态，不跳转页面
+  if (m.children) {
+    subCollapsed[m.label] = !subCollapsed[m.label]
     return
   }
   router.push(m.path)
@@ -275,6 +259,35 @@ function onMenu(m) {
   align-items: center;
   justify-content: center;
 }
+
+/* ---------- 二级子菜单 ---------- */
+.cwb-sub-arrow { margin-left: auto; margin-right: 8px; font-size: 12px; transition: transform 0.25s; }
+.cwb-sub-arrow.folded { transform: rotate(-90deg); }
+.cwb-submenu { padding-left: 24px; }
+.cwb-submenu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  margin-bottom: 2px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  color: var(--text-regular);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, padding-left 0.2s;
+}
+.cwb-submenu-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #c4cddb;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.cwb-submenu-item:hover { background: #f4f7fc; color: var(--gov-blue); padding-left: 16px; }
+.cwb-submenu-item:hover .cwb-submenu-dot { background: var(--gov-blue); }
+.cwb-submenu-item.active { background: var(--gov-blue-lighter); color: var(--gov-blue); font-weight: 600; }
+.cwb-submenu-item.active .cwb-submenu-dot { background: var(--gov-blue); }
 
 .cwb-back {
   display: flex;

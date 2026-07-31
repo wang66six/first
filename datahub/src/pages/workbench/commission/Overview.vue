@@ -59,8 +59,8 @@ const todoList = pendingTickets
 const metrics = [
   { label: '待处理工单', value: pendingTickets.length, unit: ' 项', icon: 'Tickets', bg: '#fef0f0', color: '#c0392b', path: '/workbench/commission/tickets' },
   { label: '待审批需求', value: 3, unit: ' 项', icon: 'DocumentChecked', bg: '#fdf6ec', color: '#b7791f', path: '/workbench/commission/demand' },
-  { label: '本月供数目录', value: supplyDemandData.share.summary[0].value, unit: ' 个', icon: 'Upload', bg: '#eef4fc', color: '#1a4f9c', path: '/workbench/commission/supply-demand' },
-  { label: '本月用数调用（万次）', value: Math.round(supplyDemandData.share.summary[1].value / 10000), unit: '', icon: 'Download', bg: '#f0f9eb', color: '#3f7d2c', path: '/workbench/commission/supply-demand' }
+  { label: '本月供数目录', value: supplyDemandData.share.summary[0].value, unit: ' 个', icon: 'Upload', bg: '#eef4fc', color: '#1a4f9c', path: '/workbench/commission/supply-demand-stats' },
+  { label: '本月用数调用（万次）', value: Math.round(supplyDemandData.share.summary[1].value / 10000), unit: '', icon: 'Download', bg: '#f0f9eb', color: '#3f7d2c', path: '/workbench/commission/supply-demand-stats' }
 ]
 
 function priorityType(p) {
