@@ -18,9 +18,8 @@ const trail = computed(() => {
   const items = []
   const meta = route.meta || {}
   if (route.path.startsWith('/manage')) items.push({ title: '治理部管理后台', path: '/manage' })
-  if (route.path.startsWith('/workbench/personal')) items.push({ title: '个人工作台', path: '/workbench/personal' })
   // 四类角色工作台（委办 / 治理部 / 区 / 服务商）：按 meta 生成工作台层级
-  if (meta.workbench && meta.workbench !== 'personal' && meta.wbName) {
+  if (meta.workbench && meta.wbName) {
     items.push({ title: meta.wbName, path: `/workbench/${meta.workbench}` })
   }
   if (meta.group) items.push({ title: meta.group })

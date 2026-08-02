@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>上海市大数据资源平台</title>
+    <!-- 首帧前确定 zoom / 背景 / 主题：登录页固定 zoom 1 并铺深蓝底色，其他页恢复用户偏好，避免刷新白屏闪烁 -->
+    <script>
+      (function(){
+        var root = document.documentElement;
+        var isLogin = location.pathname === '/login' || location.pathname === '/login/';
+        var scale = isLogin ? 1 : (parseFloat(localStorage.getItem('dh_font_scale')) || 1);
+        root.style.setProperty('--app-font-scale', String(scale));
+        /* 首帧背景：登录页深蓝底色（与组件底色一致，背景图加载前无白闪），内页浅灰蓝 */
+        root.style.setProperty('--boot-bg', isLogin ? '#4a70ac' : '#f5f8fc');
+        /* 深色/高对比主题在 CSS 加载前先写回，防止暗色用户刷新时亮色闪烁 */
+        var theme = localStorage.getItem('dh_theme');
+        if (theme === 'dark' || theme === 'highContrast') {
+          root.setAttribute('data-theme', theme);
+          if (theme === 'dark' && !isLogin) root.style.setProperty('--boot-bg', '#0f1825');
+        }
+      })();
+    </script>
+    <style>
+      /* 首帧兜底底色，Vue 挂载后由组件背景无缝接管 */
+      html { background: var(--boot-bg, #f5f8fc); }
+      html[data-theme='dark'] { background: #0f1825; }
+    </style>
+    <script type="module" crossorigin src="/assets/index-DK800az4.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/_plugin-vue_export-helper-D_sH7RcC.js">
+    <link rel="modulepreload" crossorigin href="/assets/runtime-dom.esm-bundler-Cm_yMZ3k.js">
+    <link rel="modulepreload" crossorigin href="/assets/user-Glq2zEp_.js">
+    <link rel="modulepreload" crossorigin href="/assets/use-global-config-BryRPEQH.js">
+    <link rel="modulepreload" crossorigin href="/assets/message-BIEqWVUb.js">
+    <link rel="modulepreload" crossorigin href="/assets/message-box-KIs725Cz.js">
+    <link rel="modulepreload" crossorigin href="/assets/notification-BkQhzZf6.js">
+    <link rel="modulepreload" crossorigin href="/assets/vue-router-DW1m0Vt2.js">
+    <link rel="modulepreload" crossorigin href="/assets/useFontScale-B0Kmwvjy.js">
+    <link rel="modulepreload" crossorigin href="/assets/useTheme-NSZSspBe.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-Z3ffXTP8.css">
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
+</html>

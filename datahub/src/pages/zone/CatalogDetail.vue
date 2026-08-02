@@ -105,8 +105,8 @@ function apply() {
   applying.value = true
   setTimeout(() => {
     applying.value = false
-    ElMessage.success('用数申请已提交，可在个人工作台查看进度')
-    router.push('/workbench/personal/applications')
+    ElMessage.success('用数申请已提交，可在工作台统一待办查看进度')
+    router.push(`/workbench/${user.roles[0] || 'governance'}/todo`)
   }, 600)
 }
 </script>

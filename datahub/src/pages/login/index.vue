@@ -229,7 +229,10 @@ onBeforeMount(() => applyScale(1))
 onMounted(startCountdown)
 onBeforeUnmount(() => {
   clearInterval(timer)
-  applyScale(fontScaleRef.value)
+  // 从 localStorage 读取真实用户偏好（模块初始化时 ref 可能因 isLoginPage 被置为 1）
+  const stored = parseFloat(localStorage.getItem('dh_font_scale')) || 1
+  fontScaleRef.value = stored
+  applyScale(stored)
 })
 </script>
 

@@ -85,7 +85,7 @@ import { reactive, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useUserStore } from '@/store/user'
-import { unifiedTodos } from '@/mock'
+import { unifiedTodos, unreadMsgCount, pendingTodoCount } from '@/mock'
 import { getWorkbenchMenuGroups } from '@/config/workbenchMenus'
 import TopNavbar from '@/components/TopNavbar.vue'
 
@@ -97,8 +97,8 @@ const user = useUserStore()
 onMounted(() => document.documentElement.classList.add('no-scrollbar'))
 onBeforeUnmount(() => document.documentElement.classList.remove('no-scrollbar'))
 
-// 统一待办角标：待处理的单据数
-const pendingCount = unifiedTodos.filter((t) => t.status === '待处理').length
+// 统一待办角标：未读消息数 + 待办事项数
+const pendingCount = unreadMsgCount + pendingTodoCount
 
 // 当前工作台标识（commission / governance / district / provider），从匹配路由 meta 派生
 const workbench = computed(() => {

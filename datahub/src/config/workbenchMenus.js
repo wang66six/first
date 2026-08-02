@@ -98,7 +98,6 @@ export function getWorkbenchMenuGroups(b, wb) {
     {
       title: '系统设置',
       items: [
-        { label: '个人资料', icon: 'User', path: `${b}/profile` },
         { label: '退出登录', icon: 'SwitchButton', danger: true }
       ]
     }

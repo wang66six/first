@@ -69,7 +69,6 @@
                 >{{ t.label }}</button>
               </div>
             </li>
-            <el-dropdown-item command="profile" divided>个人中心</el-dropdown-item>
             <el-dropdown-item command="logout" divided>退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -116,9 +115,7 @@ function goWorkbench(path) {
 }
 
 function onCommand(cmd) {
-  if (cmd === 'profile') {
-    router.push('/workbench/personal/settings')
-  } else if (cmd === 'logout') {
+  if (cmd === 'logout') {
     ElMessageBox.confirm('确定退出登录吗？', '提示', { type: 'warning' }).then(() => {
       user.logout()
       ElMessage.success('已退出登录')

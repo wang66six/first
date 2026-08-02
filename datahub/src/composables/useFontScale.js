@@ -20,17 +20,18 @@ function readStoredScale() {
   return FONT_SCALES.some((s) => s.value === v) ? v : 1
 }
 
-// 模块级单例：多处引用共享同一响应式状态
-const scale = ref(readStoredScale())
+// 模块级单例：登录页固定 1，其他页用存储值
+const isLoginPage = typeof location !== 'undefined' && (location.pathname === '/login' || location.pathname === '/login/')
+const scale = ref(isLoginPage ? 1 : readStoredScale())
 
 function applyScale(v) {
   document.documentElement.style.setProperty('--app-font-scale', String(v))
 }
 export { applyScale }
 
-/** 应用启动时调用一次，把持久化的字号写回根元素 */
+/** 应用启动时调用一次，把持久化的字号写回根元素（登录页跳过，由 index.html 内联脚本已处理） */
 export function initFontScale() {
-  applyScale(scale.value)
+  if (!isLoginPage) applyScale(scale.value)
 }
 
 export function useFontScale() {

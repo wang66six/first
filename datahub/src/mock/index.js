@@ -384,6 +384,10 @@ export const wbMessages = [
 ]
 
 // 统一待办：服务单/需求单/工单/三清单 四类单据汇总
+// 未读消息数 / 待办事项数（首页边栏角标 + 工作台侧栏角标共用）
+export const unreadMsgCount = 5
+export const pendingTodoCount = 3
+
 export const unifiedTodos = [
   { id: 'GD-20260727001', title: '政务云资源扩容服务申请', type: '服务单', submitter: '李想', time: '2026-07-27 09:15', status: '待处理' },
   { id: 'GD-20260726154', title: '人口基础信息共享需求确认', type: '需求单', submitter: '王维嘉', time: '2026-07-26 16:40', status: '处理中' },

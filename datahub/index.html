@@ -5,6 +5,14 @@
     <link rel="icon" type="image/png" href="/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>上海市大数据资源平台</title>
+    <!-- 首帧前确定 zoom：登录页固定 1，其他页恢复用户偏好，避免刷新白屏闪烁 -->
+    <script>
+      (function(){
+        var isLogin = location.pathname === '/login' || location.pathname === '/login/';
+        var scale = isLogin ? 1 : (parseFloat(localStorage.getItem('dh_font_scale')) || 1);
+        document.documentElement.style.setProperty('--app-font-scale', String(scale));
+      })();
+    </script>
   </head>
   <body>
     <div id="app"></div>

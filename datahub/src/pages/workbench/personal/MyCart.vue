@@ -63,8 +63,8 @@ function submitApply() {
     submitting.value = false
     const names = selected.value.map((r) => r.name)
     user.removeFromCart(selected.value.map((r) => r.id))
-    ElMessage.success(`已统一提交 ${names.length} 项用数申请，可在「我的申请」查看进度`)
-    router.push('/workbench/personal/applications')
+    ElMessage.success(`已统一提交 ${names.length} 项用数申请，可在「统一待办」查看进度`)
+    router.push(`/workbench/${user.roles[0] || 'governance'}/todo`)
   }, 800)
 }
 </script>

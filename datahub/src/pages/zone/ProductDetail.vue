@@ -72,10 +72,12 @@
 import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import { useUserStore } from '@/store/user'
 import { products } from '@/mock'
 
 const route = useRoute()
 const router = useRouter()
+const user = useUserStore()
 const product = computed(() => products.find((p) => p.id === route.params.id))
 
 const dialogVisible = ref(false)
@@ -91,8 +93,8 @@ function submit() {
   setTimeout(() => {
     submitting.value = false
     dialogVisible.value = false
-    ElMessage.success('产品申请已提交，可在个人工作台查看审批进度')
-    router.push('/workbench/personal/applications')
+    ElMessage.success('产品申请已提交，可在工作台统一待办查看审批进度')
+    router.push(`/workbench/${user.roles[0] || 'governance'}/todo`)
   }, 700)
 }
 </script>

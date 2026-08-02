@@ -55,7 +55,6 @@ function makeWorkbenchRoute({ key, name, roles }) {
       { path: 'data-share', name: `${key}-data-share`, component: () => import('@/pages/workbench/commission/FeaturePlaceholder.vue'), meta: { title: '数据共享', pending: true } },
       { path: 'data-open', name: `${key}-data-open`, component: () => import('@/pages/workbench/commission/FeaturePlaceholder.vue'), meta: { title: '数据开放', pending: true } },
       { path: 'authorized-operation', name: `${key}-authorized-operation`, component: () => import('@/pages/workbench/commission/FeaturePlaceholder.vue'), meta: { title: '授权运营' } },
-      { path: 'profile', name: `${key}-profile`, component: () => import('@/pages/workbench/personal/AccountSettings.vue'), meta: { title: '个人资料' } },
       // 兼容既有跳转链接的旧路径
       { path: 'tickets', name: `${key}-tickets`, component: () => import('@/pages/workbench/commission/Tickets.vue'), meta: { title: '工单管理' } },
       { path: 'demand', name: `${key}-demand`, component: () => import('@/pages/workbench/commission/DemandSubmit.vue'), meta: { title: '需求提交' } },
@@ -113,19 +112,6 @@ const routes = [
     component: () => import('@/layouts/PortalLayout.vue'),
     children: [
       { path: '', name: 'NoticeDetail', component: () => import('@/pages/notice/NoticeDetail.vue'), meta: { title: '公告详情' } }
-    ]
-  },
-  {
-    path: '/workbench/personal',
-    component: () => import('@/layouts/WorkbenchLayout.vue'),
-    meta: { roles: ['governance', 'commission', 'district', 'provider'], workbench: 'personal' },
-    children: [
-      { path: '', name: 'PersonalOverview', component: () => import('@/pages/workbench/personal/Overview.vue'), meta: { title: '工作台概览' } },
-      { path: 'applications', name: 'MyApplications', component: () => import('@/pages/workbench/personal/MyApplications.vue'), meta: { title: '我的申请' } },
-      { path: 'cart', name: 'MyCart', component: () => import('@/pages/workbench/personal/MyCart.vue'), meta: { title: '我的收藏夹' } },
-      { path: 'auth-data', name: 'MyAuthData', component: () => import('@/pages/workbench/personal/MyAuthData.vue'), meta: { title: '我的授权数据' } },
-      { path: 'messages', name: 'Messages', component: () => import('@/pages/workbench/personal/Messages.vue'), meta: { title: '消息通知' } },
-      { path: 'settings', name: 'AccountSettings', component: () => import('@/pages/workbench/personal/AccountSettings.vue'), meta: { title: '账号设置' } }
     ]
   },
   // 四类工作台（委办 / 治理部 / 区 / 服务商）：独立侧边栏布局，结构一致仅名称不同

@@ -378,15 +378,17 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, reactive, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { useUserStore } from '@/store/user'
 import CountUp from '@/components/CountUp.vue'
+import { useFontScale } from '@/composables/useFontScale'
 import {
   searchHints, heroStats, hotCatalogTags,
   legalLibrary, naturalLibrary, industryProducts,
-  contractRunning, latestDeals, notices, catalogs
+  contractRunning, latestDeals, notices, catalogs,
+  unreadMsgCount, pendingTodoCount
 } from '@/mock'
 
 const router = useRouter()
@@ -410,15 +412,31 @@ const hotTop3 = computed(() => hotTags.slice(0, 3))
 // 最新目录：按更新时间降序取 3 条
 const latestCatalogs = [...catalogs].sort((a, b) => b.updateTime.localeCompare(a.updateTime)).slice(0, 3)
 
-// 右侧快捷边栏：消息 / 待办数字角标
-const msgCount = ref(5)
-const todoCount = ref(3)
+// 右侧快捷边栏：消息 / 待办数字角标（与工作台侧栏共用同一数据源）
+const msgCount = ref(unreadMsgCount)
+const todoCount = ref(pendingTodoCount)
 
 /* ---------- 右侧边栏拖动 ---------- */
 const SIDEBAR_KEY = 'dh_sidebar_pos'
 const sideDragging = ref(false)
 const sidePos = reactive({ top: null, left: null }) // null 表示使用默认位置
 let _dragStart = null
+const { scale: fontScale } = useFontScale()
+
+// 获取 zoom 感知后的有效视口尺寸（position:fixed 坐标系）
+function effectiveViewport() {
+  const z = fontScale.value || 1
+  return { w: window.innerWidth / z, h: window.innerHeight / z }
+}
+
+// 将坐标约束在有效视口内
+function clampPos(top, left) {
+  const vp = effectiveViewport()
+  return {
+    top: Math.max(0, Math.min(vp.h - 60, top)),
+    left: Math.max(0, Math.min(vp.w - 76, left))
+  }
+}
 
 const sideBarStyle = computed(() => {
   if (sidePos.top == null) return {} // 默认位置由 CSS 控制
@@ -431,12 +449,23 @@ function readSidebarPos() {
     if (raw) {
       const p = JSON.parse(raw)
       if (typeof p.top === 'number' && typeof p.left === 'number') {
-        sidePos.top = p.top
-        sidePos.left = p.left
+        const clamped = clampPos(p.top, p.left)
+        sidePos.top = clamped.top
+        sidePos.left = clamped.left
       }
     }
   } catch (e) { /* ignore */ }
 }
+
+// zoom 变化时重新约束已存储的位置，防止边栏被遮挡
+watch(fontScale, () => {
+  if (sidePos.top != null) {
+    const clamped = clampPos(sidePos.top, sidePos.left)
+    sidePos.top = clamped.top
+    sidePos.left = clamped.left
+    localStorage.setItem(SIDEBAR_KEY, JSON.stringify({ top: sidePos.top, left: sidePos.left }))
+  }
+})
 
 function onSidebarMousedown(e) {
   // 仅左键触发；排除按钮/链接上的点击
@@ -455,19 +484,23 @@ function onSidebarMousemove(e) {
   if (!_dragStart.moved) {
     _dragStart.moved = true
     sideDragging.value = true
-    // 首次拖动时，如果还是默认位置，先计算当前实际坐标
+    // 首次拖动时，如果还是默认位置，先计算当前实际坐标（getBoundingClientRect 返回物理像素，需除以 zoom 转为 CSS 像素）
     if (sidePos.top == null) {
       const el = document.querySelector('.side-bar')
       const rect = el.getBoundingClientRect()
-      sidePos.top = rect.top
-      sidePos.left = rect.left
+      const z = fontScale.value || 1
+      sidePos.top = rect.top / z
+      sidePos.left = rect.left / z
       _dragStart.x = e.clientX
       _dragStart.y = e.clientY
       return
     }
   }
-  const newTop = Math.max(0, Math.min(window.innerHeight - 60, sidePos.top + dy))
-  const newLeft = Math.max(0, Math.min(window.innerWidth - 76, sidePos.left + dx))
+  const vp = effectiveViewport()
+  const z = fontScale.value || 1
+  // 鼠标 delta 是物理像素，需除以 zoom 转为 CSS 像素增量
+  const newTop = Math.max(0, Math.min(vp.h - 60, sidePos.top + dy / z))
+  const newLeft = Math.max(0, Math.min(vp.w - 76, sidePos.left + dx / z))
   sidePos.top = newTop
   sidePos.left = newLeft
   _dragStart.x = e.clientX
@@ -485,12 +518,10 @@ function onSidebarMouseup() {
   _dragStart = null
 }
 function onSideItem(name) {
-  if (name === '消息') {
-    msgCount.value = 0
-    ElMessage.success('已查看全部消息')
-  } else if (name === '待办') {
-    todoCount.value = 0
-    ElMessage.success('已查看全部待办事项')
+  if (name === '消息' || name === '待办') {
+    // 跳转到当前用户主角色工作台的统一待办页
+    const wb = user.roles[0] || 'governance'
+    router.push(`/workbench/${wb}/todo`)
   } else if (name === 'AI 数博士') {
     ElMessage.success('AI 数博士已就位，请在搜索框描述您的找数需求')
   } else {
@@ -643,7 +674,7 @@ function goDemand() {
   if (wb) {
     router.push(`${wb.path}/demand`)
   } else {
-    router.push('/workbench/personal/applications')
+    router.push(`/workbench/${user.roles[0] || 'governance'}/todo`)
   }
 }
 </script>

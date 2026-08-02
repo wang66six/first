@@ -76,7 +76,7 @@
             <div class="spacer"></div>
             <!-- 收藏夹入口 -->
             <el-badge :value="user.cartCount" :hidden="!user.cartCount">
-              <el-button type="warning" plain @click="$router.push('/workbench/personal/cart')">
+              <el-button type="warning" plain @click="$router.push(`/workbench/${user.roles[0] || 'governance'}/favorites`)">
                 <el-icon style="margin-right: 4px"><Star /></el-icon>收藏夹
               </el-button>
             </el-badge>
@@ -408,8 +408,8 @@ function applyNow(row) {
   loading.value = true
   setTimeout(() => {
     loading.value = false
-    ElMessage.success(`「${row.name}」用数申请已提交，可在个人工作台查看进度`)
-    router.push('/workbench/personal/applications')
+    ElMessage.success(`「${row.name}」用数申请已提交，可在工作台统一待办查看进度`)
+    router.push(`/workbench/${user.roles[0] || 'governance'}/todo`)
   }, 600)
 }
 </script>

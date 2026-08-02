@@ -53,10 +53,12 @@
 import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import { useUserStore } from '@/store/user'
 import { fusionThemes } from '@/mock'
 
 const route = useRoute()
 const router = useRouter()
+const user = useUserStore()
 const theme = computed(() => fusionThemes.find((t) => t.id === route.params.id))
 const applying = ref(false)
 
@@ -73,8 +75,8 @@ function apply() {
   applying.value = true
   setTimeout(() => {
     applying.value = false
-    ElMessage.success('融合主题使用申请已提交，可在个人工作台查看进度')
-    router.push('/workbench/personal/applications')
+    ElMessage.success('融合主题使用申请已提交，可在工作台统一待办查看进度')
+    router.push(`/workbench/${user.roles[0] || 'governance'}/todo`)
   }, 700)
 }
 </script>
