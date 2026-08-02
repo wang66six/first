@@ -26,6 +26,7 @@ const scale = ref(readStoredScale())
 function applyScale(v) {
   document.documentElement.style.setProperty('--app-font-scale', String(v))
 }
+export { applyScale }
 
 /** 应用启动时调用一次，把持久化的字号写回根元素 */
 export function initFontScale() {

@@ -81,7 +81,7 @@
 </template>
 
 <script setup>
-import { reactive, computed } from 'vue'
+import { reactive, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useUserStore } from '@/store/user'
@@ -92,6 +92,10 @@ import TopNavbar from '@/components/TopNavbar.vue'
 const route = useRoute()
 const router = useRouter()
 const user = useUserStore()
+
+// 工作台页面隐藏右侧 window 滚动条（左侧菜单栏独立滚动不受影响），离开后恢复
+onMounted(() => document.documentElement.classList.add('no-scrollbar'))
+onBeforeUnmount(() => document.documentElement.classList.remove('no-scrollbar'))
 
 // 统一待办角标：待处理的单据数
 const pendingCount = unifiedTodos.filter((t) => t.status === '待处理').length

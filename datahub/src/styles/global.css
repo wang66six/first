@@ -109,7 +109,7 @@ a { text-decoration: none; color: inherit; }
 }
 .gov-card--hover:hover {
   box-shadow: var(--card-shadow-hover);
-  transform: translateY(-4px);
+  transform: translateY(-2px);
   cursor: pointer;
 }
 
@@ -132,11 +132,23 @@ a { text-decoration: none; color: inherit; }
 .clickable { cursor: pointer; }
 .clickable:hover { color: var(--gov-blue); }
 
-/* 页面切换淡入过渡 */
-.fade-enter-active { transition: opacity 0.25s ease; }
-.fade-enter-from { opacity: 0; }
-.fade-leave-active { transition: opacity 0.15s ease; }
-.fade-leave-to { opacity: 0; }
+/* 页面切换过渡：淡入 + 轻微上移，让转场更自然 */
+.fade-enter-active { transition: opacity 0.28s ease, transform 0.28s ease; }
+.fade-enter-from { opacity: 0; transform: translateY(8px); }
+.fade-leave-active { transition: opacity 0.15s ease, transform 0.15s ease; }
+.fade-leave-to { opacity: 0; transform: translateY(-4px); }
+
+/* 数据入场 stagger 淡入：配合 :nth-child 延迟使用 */
+@keyframes stagger-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.stagger-item { animation: stagger-in 0.35s ease both; }
+.stagger-item:nth-child(2) { animation-delay: 0.06s; }
+.stagger-item:nth-child(3) { animation-delay: 0.12s; }
+.stagger-item:nth-child(4) { animation-delay: 0.18s; }
+.stagger-item:nth-child(5) { animation-delay: 0.24s; }
+.stagger-item:nth-child(6) { animation-delay: 0.3s; }
 
 /* 数字滚动指标 */
 .metric-num {
@@ -149,6 +161,44 @@ a { text-decoration: none; color: inherit; }
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-thumb { background: #c3d3ea; border-radius: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
+
+/* 隐藏 window 滚动条但保留滚动能力：仅给 <html> 加 .no-scrollbar 时生效（门户首页使用） */
+html.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+html.no-scrollbar::-webkit-scrollbar { width: 0; height: 0; display: none; }
+html.no-scrollbar body { scrollbar-width: none; }
+html.no-scrollbar body::-webkit-scrollbar { width: 0; height: 0; display: none; }
+
+/* ============ #6 统一表单与按钮视觉重量 ============ */
+:root {
+  --el-component-size: 34px;
+  --el-border-radius-base: var(--radius-sm);
+  --el-border-radius-small: 3px;
+  --el-font-size-base: 13.5px;
+}
+/* 按钮圆角与字重统一 */
+.el-button { border-radius: var(--radius-sm); font-weight: 500; transition: all 0.2s ease; }
+.el-button--primary { box-shadow: 0 2px 6px rgba(26, 79, 156, 0.25); }
+.el-button--primary:hover { box-shadow: 0 4px 12px rgba(26, 79, 156, 0.35); }
+.el-button--danger:hover { filter: brightness(0.9); }
+/* 输入框聚焦品牌色光晕 */
+.el-input__wrapper:focus-within { box-shadow: 0 0 0 2px rgba(26, 79, 156, 0.12) !important; }
+.el-select .el-input__wrapper:focus-within { box-shadow: 0 0 0 2px rgba(26, 79, 156, 0.12) !important; }
+
+/* ============ #7 表格空状态 / 加载态 ============ */
+.el-table__empty-block { min-height: 120px; }
+.el-table__empty-text { color: var(--color-text-muted); font-size: 13px; line-height: 120px; }
+/* 骨架屏统一色调 */
+.el-skeleton__item { border-radius: var(--radius-sm); }
+.el-skeleton.is-animated .el-skeleton__item { animation-duration: 1.6s; }
+
+/* ============ #8 无障碍：键盘聚焦样式 ============ */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+/* 鼠标点击不显示 outline，仅键盘导航时可见 */
+:focus:not(:focus-visible) { outline: none; }
 
 /* Element Plus 局部微调 */
 .el-table th.el-table__cell {
@@ -168,3 +218,105 @@ a { text-decoration: none; color: inherit; }
   margin-bottom: 16px;
 }
 .toolbar-row .spacer { flex: 1; }
+
+/* ============ #9 主题切换：深色模式 ============ */
+html[data-theme='dark'] {
+  --color-brand: #4a90d9;
+  --color-brand-strong: #6aabef;
+  --color-brand-deep: #0c1a2c;
+  --color-brand-soft: #3a7bc8;
+  --color-brand-tint: #1a2d45;
+  --color-accent: #e6b422;
+  --color-accent-strong: #d4a017;
+  --color-success: #34c472;
+  --color-warning: #f0964a;
+  --color-danger: #e05252;
+  --color-surface: #141e2e;
+  --color-surface-muted: #0f1825;
+  --color-text-strong: #e8edf4;
+  --color-text-body: #b8c6d9;
+  --color-text-muted: #8899ad;
+  --color-text-disabled: #556677;
+  --color-border: #2a3a4e;
+  --color-border-strong: #3a4f66;
+  --shadow-raised: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-overlay: 0 12px 32px rgba(0, 0, 0, 0.55);
+  /* Element Plus 深色适配 */
+  --el-color-primary: #4a90d9;
+  --el-bg-color: #141e2e;
+  --el-bg-color-overlay: #1a2d45;
+  --el-text-color-primary: #e8edf4;
+  --el-text-color-regular: #b8c6d9;
+  --el-border-color: #2a3a4e;
+  --el-border-color-light: #223344;
+  --el-fill-color-light: #1a2d45;
+  --el-fill-color-lighter: #162436;
+  color-scheme: dark;
+}
+html[data-theme='dark'] body {
+  background: #0f1825;
+  color: var(--color-text-body);
+}
+html[data-theme='dark'] .gov-card,
+html[data-theme='dark'] .board-card,
+html[data-theme='dark'] .el-dialog,
+html[data-theme='dark'] .el-dropdown-menu {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+html[data-theme='dark'] .el-table th.el-table__cell {
+  background: var(--color-brand-tint) !important;
+  color: var(--color-brand-strong);
+}
+html[data-theme='dark'] .el-table__row {
+  --el-table-bg-color: var(--color-surface);
+  --el-table-tr-bg-color: var(--color-surface);
+  --el-table-header-bg-color: var(--color-brand-tint);
+}
+html[data-theme='dark'] .top-navbar {
+  background: linear-gradient(90deg, #0a1420 0%, #14263d 100%);
+}
+
+/* ============ #9 主题切换：高对比模式 ============ */
+html[data-theme='highContrast'] {
+  --color-brand: #0033a0;
+  --color-brand-strong: #002277;
+  --color-brand-deep: #001155;
+  --color-brand-soft: #0044cc;
+  --color-brand-tint: #e8f0ff;
+  --color-accent: #8b6508;
+  --color-accent-strong: #6b4e06;
+  --color-success: #006633;
+  --color-warning: #cc5500;
+  --color-danger: #aa0000;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f0f0f0;
+  --color-text-strong: #000000;
+  --color-text-body: #111111;
+  --color-text-muted: #333333;
+  --color-text-disabled: #666666;
+  --color-border: #444444;
+  --color-border-strong: #222222;
+  --shadow-raised: none;
+  --shadow-hover: none;
+  --shadow-overlay: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --el-color-primary: #0033a0;
+}
+html[data-theme='highContrast'] body {
+  background: #ffffff;
+  color: #000000;
+}
+html[data-theme='highContrast'] .gov-card,
+html[data-theme='highContrast'] .board-card {
+  border: 2px solid #333;
+  box-shadow: none;
+}
+html[data-theme='highContrast'] .el-button {
+  font-weight: 700;
+  border-width: 2px;
+}
+html[data-theme='highContrast'] :focus-visible {
+  outline: 3px solid #0033a0;
+  outline-offset: 3px;
+}

@@ -336,11 +336,18 @@
       </div>
     </section>
 
-    <!-- 右侧快捷边栏：智慧问答 + 消息/待办/客服/文档 -->
-    <aside class="side-bar">
-      <div class="side-ai" @click="onSideItem('智慧问答')">
+    <!-- 右侧快捷边栏：智慧问答 + 消息/待办/客服/文档（支持拖动） -->
+    <aside
+      class="side-bar"
+      :class="{ dragging: sideDragging }"
+      :style="sideBarStyle"
+    >
+      <div class="side-drag-handle" title="按住拖动">
+        <span class="drag-dots"></span>
+      </div>
+      <div class="side-ai" @click="onSideItem('AI 数博士')">
         <div class="side-ai-avatar"><el-icon><ChatDotRound /></el-icon></div>
-        <span class="side-ai-label">智慧问答</span>
+        <span class="side-ai-label">AI 数博士</span>
       </div>
       <div class="side-card">
         <div class="side-item" @click="onSideItem('消息')">
@@ -406,6 +413,77 @@ const latestCatalogs = [...catalogs].sort((a, b) => b.updateTime.localeCompare(a
 // 右侧快捷边栏：消息 / 待办数字角标
 const msgCount = ref(5)
 const todoCount = ref(3)
+
+/* ---------- 右侧边栏拖动 ---------- */
+const SIDEBAR_KEY = 'dh_sidebar_pos'
+const sideDragging = ref(false)
+const sidePos = reactive({ top: null, left: null }) // null 表示使用默认位置
+let _dragStart = null
+
+const sideBarStyle = computed(() => {
+  if (sidePos.top == null) return {} // 默认位置由 CSS 控制
+  return { top: sidePos.top + 'px', left: sidePos.left + 'px', right: 'auto', transform: 'none' }
+})
+
+function readSidebarPos() {
+  try {
+    const raw = localStorage.getItem(SIDEBAR_KEY)
+    if (raw) {
+      const p = JSON.parse(raw)
+      if (typeof p.top === 'number' && typeof p.left === 'number') {
+        sidePos.top = p.top
+        sidePos.left = p.left
+      }
+    }
+  } catch (e) { /* ignore */ }
+}
+
+function onSidebarMousedown(e) {
+  // 仅左键触发；排除按钮/链接上的点击
+  if (e.button !== 0) return
+  _dragStart = { x: e.clientX, y: e.clientY, moved: false }
+  document.addEventListener('mousemove', onSidebarMousemove)
+  document.addEventListener('mouseup', onSidebarMouseup)
+}
+
+function onSidebarMousemove(e) {
+  if (!_dragStart) return
+  const dx = e.clientX - _dragStart.x
+  const dy = e.clientY - _dragStart.y
+  // 超过 4px 阈值才进入拖拽模式，避免误触
+  if (!_dragStart.moved && Math.abs(dx) < 4 && Math.abs(dy) < 4) return
+  if (!_dragStart.moved) {
+    _dragStart.moved = true
+    sideDragging.value = true
+    // 首次拖动时，如果还是默认位置，先计算当前实际坐标
+    if (sidePos.top == null) {
+      const el = document.querySelector('.side-bar')
+      const rect = el.getBoundingClientRect()
+      sidePos.top = rect.top
+      sidePos.left = rect.left
+      _dragStart.x = e.clientX
+      _dragStart.y = e.clientY
+      return
+    }
+  }
+  const newTop = Math.max(0, Math.min(window.innerHeight - 60, sidePos.top + dy))
+  const newLeft = Math.max(0, Math.min(window.innerWidth - 76, sidePos.left + dx))
+  sidePos.top = newTop
+  sidePos.left = newLeft
+  _dragStart.x = e.clientX
+  _dragStart.y = e.clientY
+}
+
+function onSidebarMouseup() {
+  document.removeEventListener('mousemove', onSidebarMousemove)
+  document.removeEventListener('mouseup', onSidebarMouseup)
+  if (_dragStart && _dragStart.moved) {
+    sideDragging.value = false
+    // 持久化位置
+    localStorage.setItem(SIDEBAR_KEY, JSON.stringify({ top: sidePos.top, left: sidePos.left }))
+  }
+  _dragStart = null
+}
 function onSideItem(name) {
   if (name === '消息') {
     msgCount.value = 0
@@ -413,8 +491,8 @@ function onSideItem(name) {
   } else if (name === '待办') {
     todoCount.value = 0
     ElMessage.success('已查看全部待办事项')
-  } else if (name === '智慧问答') {
-    ElMessage.success('智慧问答小助手已就位，请在搜索框描述您的找数需求')
+  } else if (name === 'AI 数博士') {
+    ElMessage.success('AI 数博士已就位，请在搜索框描述您的找数需求')
   } else {
     ElMessage.info(`「${name}」功能即将上线，敬请期待`)
   }
@@ -528,11 +606,17 @@ onMounted(() => {
   // 数据动态刷新
   refreshTimer = setInterval(refreshData, 5000)
   document.addEventListener('click', onDocClick)
+  // 恢复边栏拖拽位置
+  readSidebarPos()
+  const bar = document.querySelector('.side-bar')
+  if (bar) bar.addEventListener('mousedown', onSidebarMousedown)
 })
 onBeforeUnmount(() => {
   clearInterval(timer)
   clearInterval(refreshTimer)
   document.removeEventListener('click', onDocClick)
+  document.removeEventListener('mousemove', onSidebarMousemove)
+  document.removeEventListener('mouseup', onSidebarMouseup)
 })
 
 function doSearch(ai = false, tag) {
@@ -1253,7 +1337,7 @@ function goDemand() {
 .notice-row-date { font-size: 12.5px; color: var(--text-secondary); flex-shrink: 0; }
 
 
-/* ---------- 右侧快捷边栏 ---------- */
+/* ---------- 右侧快捷边栏（可拖动） ---------- */
 .side-bar {
   position: fixed;
   right: 14px;
@@ -1265,6 +1349,33 @@ function goDemand() {
   align-items: center;
   gap: 10px;
   width: 76px;
+  user-select: none;
+}
+.side-bar.dragging {
+  cursor: grabbing;
+  opacity: 0.92;
+  transition: none;
+}
+.side-bar.dragging * { pointer-events: none; }
+/* 拖拽手柄 */
+.side-drag-handle {
+  width: 36px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 1px 4px rgba(16, 42, 84, 0.12);
+  transition: background 0.2s;
+}
+.side-drag-handle:hover { background: #e8f0fb; }
+.drag-dots {
+  width: 16px;
+  height: 4px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(90deg, #a0b4cc 0 3px, transparent 3px 5.5px);
 }
 .side-ai {
   display: flex;

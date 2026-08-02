@@ -20,7 +20,17 @@
           </el-tooltip>
         </div>
         <div class="quick-items">
-          <div v-for="q in quickActions" :key="q.label" class="quick-item" @click="onQuick(q)">
+          <div
+            v-for="q in quickActions"
+            :key="q.label"
+            class="quick-item stagger-item"
+            role="button"
+            tabindex="0"
+            :title="q.label"
+            :aria-label="`快捷操作：${q.label}`"
+            @click="onQuick(q)"
+            @keydown.enter="onQuick(q)"
+          >
             <span class="quick-icon" :style="{ background: q.bg, color: q.color }">
               <el-icon :size="18"><component :is="q.icon" /></el-icon>
             </span>
@@ -1156,7 +1166,7 @@ watch(filteredStopUpdate, () => (stopPage.value = 1))
   transition: opacity 0.25s;
   pointer-events: none;
 }
-.quick-item:hover { border-color: var(--gov-blue); box-shadow: 0 8px 20px rgba(26, 79, 156, 0.16); transform: translateY(-3px); }
+.quick-item:hover { border-color: var(--gov-blue); box-shadow: 0 4px 12px rgba(26, 79, 156, 0.14); transform: translateY(-2px); }
 .quick-item:hover::before { opacity: 1; }
 .quick-item:hover .quick-icon { transform: scale(1.12) rotate(-4deg); }
 .quick-item:active { transform: translateY(-1px) scale(0.98); }

@@ -130,10 +130,11 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeMount, onBeforeUnmount } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { useUserStore } from '@/store/user'
+import { useFontScale, applyScale } from '@/composables/useFontScale'
 import logoImg from '@/assets/logo.png'
 
 const router = useRouter()
@@ -222,8 +223,14 @@ function pwdLogin() {
   }, 700)
 }
 
+// 登录页固定原始大小：挂载前将全局缩放临时归 1（首帧即生效，无闪烁），卸载后恢复用户设置
+const { scale: fontScaleRef } = useFontScale()
+onBeforeMount(() => applyScale(1))
 onMounted(startCountdown)
-onBeforeUnmount(() => clearInterval(timer))
+onBeforeUnmount(() => {
+  clearInterval(timer)
+  applyScale(fontScaleRef.value)
+})
 </script>
 
 <style scoped>

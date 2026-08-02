@@ -8,9 +8,11 @@ import App from './App.vue'
 import router from './router'
 import './styles/global.css'
 import { initFontScale } from './composables/useFontScale'
+import { initTheme } from './composables/useTheme'
 
-// 启动时恢复用户持久化的全局字号
+// 启动时恢复用户持久化的全局字号与主题
 initFontScale()
+initTheme()
 
 const app = createApp(App)
 

@@ -55,6 +55,20 @@
                 >{{ s.label }}</button>
               </div>
             </li>
+            <!-- 主题切换：浅色/深色/高对比 -->
+            <li class="fs-row" @click.stop>
+              <span class="fs-label">主题</span>
+              <div class="fs-opts">
+                <button
+                  v-for="t in themeList"
+                  :key="t.key"
+                  class="fs-btn"
+                  :class="{ active: t.key === currentTheme }"
+                  :title="`切换主题：${t.label}`"
+                  @click="setTheme(t.key)"
+                >{{ t.label }}</button>
+              </div>
+            </li>
             <el-dropdown-item command="profile" divided>个人中心</el-dropdown-item>
             <el-dropdown-item command="logout" divided>退出登录</el-dropdown-item>
           </el-dropdown-menu>
@@ -69,12 +83,14 @@ import { useRouter, useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useUserStore } from '@/store/user'
 import { useFontScale } from '@/composables/useFontScale'
+import { useTheme } from '@/composables/useTheme'
 import logoImg from '@/assets/logo.png'
 
 const router = useRouter()
 const route = useRoute()
 const user = useUserStore()
 const { scale: fontScale, scales: fontScales, setScale: setFontScale } = useFontScale()
+const { theme: currentTheme, themes: themeList, setTheme } = useTheme()
 
 const menus = [
   { label: '首页', path: '/home' },
