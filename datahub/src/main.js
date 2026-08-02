@@ -7,6 +7,10 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import App from './App.vue'
 import router from './router'
 import './styles/global.css'
+import { initFontScale } from './composables/useFontScale'
+
+// 启动时恢复用户持久化的全局字号
+initFontScale()
 
 const app = createApp(App)
 

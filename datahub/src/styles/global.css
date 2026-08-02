@@ -1,48 +1,102 @@
+/* 全局字体：思源黑体（正文交互）+ 思源宋体（公文式标题），@import 必须置于文件最前 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700;900&display=swap');
+
 /* ============ 政务深蓝主题 · 上海市大数据资源平台 ============ */
 :root {
-  /* 政务主色 */
-  --gov-blue: #1a4f9c;
-  --gov-blue-dark: #123a75;
-  --gov-blue-darker: #0c2c5c;
-  --gov-blue-light: #2d6bc4;
-  --gov-blue-lighter: #eaf1fb;
-  --gov-blue-bg: #f5f8fc;
-  /* 辅助色 */
-  --gov-gold: #d4a017;
-  --gov-red: #c0392b;
-  --gov-green: #1e8e4e;
-  --gov-orange: #e67e22;
-  /* 文字色 */
-  --text-primary: #1f2d3d;
-  --text-regular: #45546a;
-  --text-secondary: #8492a6;
-  /* 边框与阴影 */
-  --border-color: #dce3ed;
-  --card-shadow: 0 2px 8px rgba(18, 58, 117, 0.08);
-  --card-shadow-hover: 0 8px 24px rgba(18, 58, 117, 0.16);
+  /* —— 语义层 · 品牌色 —— */
+  --color-brand: #1a4f9c;          /* 政务深蓝 */
+  --color-brand-strong: #123a75;
+  --color-brand-deep: #0c2c5c;
+  --color-brand-soft: #2d6bc4;
+  --color-brand-tint: #eaf1fb;
+  --color-accent: #d4a017;         /* 金色点缀（饰条/高亮，不作正文色） */
+  --color-accent-strong: #b8860b;  /* 深金（浅底上的金色文字用此档） */
+  --color-success: #1e8e4e;
+  --color-warning: #e67e22;
+  --color-danger: #c0392b;
+
+  /* —— 语义层 · 表面与文字 —— */
+  --color-surface: #ffffff;
+  --color-surface-muted: #f5f8fc;
+  --color-text-strong: #1f2d3d;
+  --color-text-body: #45546a;
+  --color-text-muted: #5b6b81;     /* 次要文字，对比度提升至 WCAG AA（原 #8492a6） */
+  --color-text-disabled: #a3b1c2;
+  --color-border: #dce3ed;
+  --color-border-strong: #c3d3ea;
+
+  /* —— 语义层 · 海拔阴影 —— */
+  --shadow-raised: 0 2px 8px rgba(18, 58, 117, 0.08);
+  --shadow-hover: 0 8px 24px rgba(18, 58, 117, 0.16);
+  --shadow-overlay: 0 12px 32px rgba(12, 44, 92, 0.22);
+
+  /* —— 语义层 · 间距网格（4px 基线） —— */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+
+  /* —— 语义层 · 圆角层级 —— */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
+
+  /* —— 语义层 · 字体族 —— */
+  --font-body: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Noto Serif SC', 'STSong', 'SimSun', serif;
+  --font-num: 'DIN Alternate', 'Bahnschrift', 'Helvetica Neue', Arial, sans-serif;
+
+  /* —— 兼容层 · 既有 --gov-* / --text-* 全部指向语义层 —— */
+  --gov-blue: var(--color-brand);
+  --gov-blue-dark: var(--color-brand-strong);
+  --gov-blue-darker: var(--color-brand-deep);
+  --gov-blue-light: var(--color-brand-soft);
+  --gov-blue-lighter: var(--color-brand-tint);
+  --gov-blue-bg: var(--color-surface-muted);
+  --gov-gold: var(--color-accent);
+  --gov-red: var(--color-danger);
+  --gov-green: var(--color-success);
+  --gov-orange: var(--color-warning);
+  --text-primary: var(--color-text-strong);
+  --text-regular: var(--color-text-body);
+  --text-secondary: var(--color-text-muted);
+  --border-color: var(--color-border);
+  --card-shadow: var(--shadow-raised);
+  --card-shadow-hover: var(--shadow-hover);
 
   /* Element Plus 主题覆写 */
-  --el-color-primary: var(--gov-blue);
+  --el-color-primary: var(--color-brand);
   --el-color-primary-light-3: #4a77bd;
   --el-color-primary-light-5: #7a9cd0;
   --el-color-primary-light-7: #aac1e2;
   --el-color-primary-light-8: #c3d3ea;
-  --el-color-primary-light-9: var(--gov-blue-lighter);
-  --el-color-primary-dark-2: var(--gov-blue-dark);
+  --el-color-primary-light-9: var(--color-brand-tint);
+  --el-color-primary-dark-2: var(--color-brand-strong);
 }
+
+/* 全局字号缩放：小 0.875 / 标准 1 / 大 1.125 / 特大 1.25，由 useFontScale 写入 */
+html { zoom: var(--app-font-scale, 1); }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body, #app { height: 100%; }
 
 body {
-  font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-body);
   color: var(--text-primary);
   background: var(--gov-blue-bg);
   font-size: 14px;
   min-width: 1366px;
   -webkit-font-smoothing: antialiased;
 }
+
+/* 公文式标题：思源宋体，用于欢迎卡、板块主标题等庄重场合 */
+.title-font { font-family: var(--font-display); font-weight: 700; letter-spacing: 0.5px; }
 
 a { text-decoration: none; color: inherit; }
 
@@ -86,7 +140,7 @@ a { text-decoration: none; color: inherit; }
 
 /* 数字滚动指标 */
 .metric-num {
-  font-family: 'DIN Alternate', 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-num);
   font-weight: 700;
   color: var(--gov-blue);
 }

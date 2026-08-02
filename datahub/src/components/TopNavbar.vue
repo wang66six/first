@@ -32,8 +32,8 @@
       </el-dropdown>
       <span v-else-if="user.workbenches.length === 1" class="nav-drop" @click="goWorkbench(user.workbenches[0].path)">工作台</span>
 
-      <!-- 用户下拉 -->
-      <el-dropdown @command="onCommand">
+      <!-- 用户下拉：右对齐，避免高倍字号下右侧溢出 -->
+      <el-dropdown placement="bottom-end" @command="onCommand">
         <div class="user-box">
           <el-avatar :size="30" class="user-avatar">{{ user.name.slice(0, 1) }}</el-avatar>
           <el-icon class="drop-arrow"><ArrowDown /></el-icon>
@@ -41,6 +41,20 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item disabled>{{ user.roleLabel }}</el-dropdown-item>
+            <!-- 字号调节：小/标准/大/特大四档，点击不关闭下拉 -->
+            <li class="fs-row" @click.stop>
+              <span class="fs-label">字号</span>
+              <div class="fs-opts">
+                <button
+                  v-for="s in fontScales"
+                  :key="s.key"
+                  class="fs-btn"
+                  :class="{ active: s.value === fontScale }"
+                  :title="`全局字号：${s.label}`"
+                  @click="setFontScale(s.value)"
+                >{{ s.label }}</button>
+              </div>
+            </li>
             <el-dropdown-item command="profile" divided>个人中心</el-dropdown-item>
             <el-dropdown-item command="logout" divided>退出登录</el-dropdown-item>
           </el-dropdown-menu>
@@ -54,11 +68,13 @@
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useUserStore } from '@/store/user'
+import { useFontScale } from '@/composables/useFontScale'
 import logoImg from '@/assets/logo.png'
 
 const router = useRouter()
 const route = useRoute()
 const user = useUserStore()
+const { scale: fontScale, scales: fontScales, setScale: setFontScale } = useFontScale()
 
 const menus = [
   { label: '首页', path: '/home' },
@@ -153,4 +169,34 @@ function onCommand(cmd) {
 
 .user-box { display: flex; align-items: center; gap: 6px; cursor: pointer; color: #fff; outline: none; }
 .user-avatar { background: var(--gov-gold); font-weight: 700; flex-shrink: 0; }
+
+/* 字号调节行（用户下拉内） */
+.fs-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 16px 8px;
+  list-style: none;
+}
+.fs-label { font-size: 13px; color: var(--text-secondary); white-space: nowrap; }
+.fs-opts { display: flex; gap: 6px; }
+.fs-btn {
+  min-width: 34px;
+  padding: 3px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--text-regular);
+  font-size: 12px;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.fs-btn:hover { color: var(--color-brand); border-color: var(--color-brand); }
+.fs-btn.active {
+  background: var(--color-brand);
+  border-color: var(--color-brand);
+  color: #fff;
+  font-weight: 600;
+}
 </style>

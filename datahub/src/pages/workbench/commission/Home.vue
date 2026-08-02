@@ -5,7 +5,7 @@
       <div class="gov-card welcome-card">
         <div class="welcome-avatar"><el-icon :size="24"><Monitor /></el-icon></div>
         <div>
-          <h2 class="welcome-title">{{ wbDept }}<span class="welcome-office">{{ wbOffice }}</span></h2>
+          <h2 class="welcome-title title-font">{{ wbDept }}<span class="welcome-office">{{ wbOffice }}</span></h2>
           <p class="welcome-meta"><el-icon><Clock /></el-icon>登录时间：{{ user.loginTime || nowText }}</p>
           <p class="welcome-meta"><el-icon><Position /></el-icon>登录 IP：{{ user.loginIp || '10.208.36.72' }}</p>
         </div>
