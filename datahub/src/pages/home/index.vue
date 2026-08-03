@@ -336,43 +336,47 @@
     </section>
 
     <!-- 右侧快捷边栏：智慧问答 + 消息/待办/客服/文档（支持拖动） -->
-    <aside
-      class="side-bar"
-      :class="{ dragging: sideDragging }"
-      :style="sideBarStyle"
-    >
-      <div class="side-drag-handle" title="按住拖动">
-        <span class="drag-dots"></span>
-      </div>
-      <div class="side-ai" @click="onSideItem('AI 数博士')">
-        <div class="side-ai-avatar"><el-icon><ChatDotRound /></el-icon></div>
-        <span class="side-ai-label">AI 数博士</span>
-      </div>
-      <div class="side-card">
-        <div class="side-item" @click="onSideItem('消息')">
-          <div class="side-icon-wrap">
-            <el-icon class="side-icon"><Bell /></el-icon>
-            <span v-if="msgCount" class="side-badge">{{ msgCount }}</span>
+    <!-- teleport 到 body：#app zoom 会改变 fixed 包含块使边栏脱离视口固定，移出后在 1:1 坐标系定位，由自身 transform 合并缩放 -->
+    <teleport to="body">
+      <aside
+        ref="sideBarEl"
+        class="side-bar"
+        :class="{ dragging: sideDragging }"
+        :style="sideBarStyle"
+      >
+        <div class="side-drag-handle" title="按住拖动">
+          <span class="drag-dots"></span>
+        </div>
+        <div class="side-ai" @click="onSideItem('AI 数博士')">
+          <div class="side-ai-avatar"><el-icon><ChatDotRound /></el-icon></div>
+          <span class="side-ai-label">AI 数博士</span>
+        </div>
+        <div class="side-card">
+          <div class="side-item" @click="onSideItem('消息')">
+            <div class="side-icon-wrap">
+              <el-icon class="side-icon"><Bell /></el-icon>
+              <span v-if="msgCount" class="side-badge">{{ msgCount }}</span>
+            </div>
+            <span class="side-text">消息</span>
           </div>
-          <span class="side-text">消息</span>
-        </div>
-        <div class="side-item" @click="onSideItem('待办')">
-          <div class="side-icon-wrap">
-            <el-icon class="side-icon"><Tickets /></el-icon>
-            <span v-if="todoCount" class="side-badge">{{ todoCount }}</span>
+          <div class="side-item" @click="onSideItem('待办')">
+            <div class="side-icon-wrap">
+              <el-icon class="side-icon"><Tickets /></el-icon>
+              <span v-if="todoCount" class="side-badge">{{ todoCount }}</span>
+            </div>
+            <span class="side-text">待办</span>
           </div>
-          <span class="side-text">待办</span>
+          <div class="side-item" @click="onSideItem('客服')">
+            <div class="side-icon-wrap"><el-icon class="side-icon"><Service /></el-icon></div>
+            <span class="side-text">客服</span>
+          </div>
+          <div class="side-item" @click="onSideItem('文档')">
+            <div class="side-icon-wrap"><el-icon class="side-icon"><Document /></el-icon></div>
+            <span class="side-text">文档</span>
+          </div>
         </div>
-        <div class="side-item" @click="onSideItem('客服')">
-          <div class="side-icon-wrap"><el-icon class="side-icon"><Service /></el-icon></div>
-          <span class="side-text">客服</span>
-        </div>
-        <div class="side-item" @click="onSideItem('文档')">
-          <div class="side-icon-wrap"><el-icon class="side-icon"><Document /></el-icon></div>
-          <span class="side-text">文档</span>
-        </div>
-      </div>
-    </aside>
+      </aside>
+    </teleport>
   </div>
 </template>
 
@@ -381,8 +385,8 @@ import { ref, reactive, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { useUserStore } from '@/store/user'
-import CountUp from '@/components/CountUp.vue'
 import { useFontScale } from '@/composables/useFontScale'
+import CountUp from '@/components/CountUp.vue'
 import {
   searchHints, heroStats, hotCatalogTags,
   legalLibrary, naturalLibrary, industryProducts,
@@ -417,29 +421,49 @@ const todoCount = ref(pendingTodoCount)
 
 /* ---------- 右侧边栏拖动 ---------- */
 const SIDEBAR_KEY = 'dh_sidebar_pos'
+const SIDE_BAR_W = 76 // 边栏布局宽（px）
 const sideDragging = ref(false)
-const sidePos = reactive({ top: null, left: null }) // null 表示使用默认位置
+const sidePos = reactive({ top: null, left: null }) // null 表示尚未定位（onMounted 后按默认位置写入）
+const sideBarEl = ref(null)
+const sideCustomized = ref(false) // 用户拖拽过/存过位置后不再随缩放自动调整
+const { scale: pageScaleRef } = useFontScale()
 let _dragStart = null
-const { scale: fontScale } = useFontScale()
 
-// 获取 zoom 感知后的有效视口尺寸（position:fixed 坐标系）
-function effectiveViewport() {
-  const z = fontScale.value || 1
-  return { w: window.innerWidth / z, h: window.innerHeight / z }
+// 当前页面缩放倍率（--app-font-scale，标准 1 / 大 1.125 / 特大 1.25）
+function pageScale() {
+  return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--app-font-scale')) || 1
 }
 
-// 将坐标约束在有效视口内
+// 获取有效视口尺寸（position:fixed 坐标系，body 下为 1:1 视觉坐标）
+function effectiveViewport() {
+  return { w: window.innerWidth, h: window.innerHeight }
+}
+
+// 将坐标约束在有效视口内（按缩放后的视觉尺寸约束）
 function clampPos(top, left) {
   const vp = effectiveViewport()
+  const s = pageScale()
   return {
-    top: Math.max(0, Math.min(vp.h - 60, top)),
-    left: Math.max(0, Math.min(vp.w - 76, left))
+    top: Math.max(0, Math.min(vp.h - 60 * s, top)),
+    left: Math.max(0, Math.min(vp.w - SIDE_BAR_W * s, left))
   }
 }
 
+// 默认位置：视口右侧垂直居中。fixed 百分比在 #app zoom 下解析异常（Chrome 布局怪癖），
+// 故全部使用 px 计算：视觉尺寸 = 布局尺寸 × 缩放倍率
+function layoutSidebarDefault() {
+  if (sideCustomized.value) return
+  const s = pageScale()
+  const h = (sideBarEl.value ? sideBarEl.value.offsetHeight : 0) * s || 436 * s
+  const clamped = clampPos(Math.round((window.innerHeight - h) / 2), Math.round(window.innerWidth - SIDE_BAR_W * s - 14))
+  sidePos.top = clamped.top
+  sidePos.left = clamped.left
+}
+
 const sideBarStyle = computed(() => {
-  if (sidePos.top == null) return {} // 默认位置由 CSS 控制
-  return { top: sidePos.top + 'px', left: sidePos.left + 'px', right: 'auto', transform: 'none' }
+  if (sidePos.top == null) return {} // 首帧前由 CSS 兜底，onMounted 后写入默认位置
+  // 缩放由自身 transform 完成（body 下不受 #app zoom 影响），位置已按视觉尺寸算好
+  return { top: sidePos.top + 'px', left: sidePos.left + 'px', right: 'auto', transform: 'scale(var(--app-font-scale, 1))' }
 })
 
 function readSidebarPos() {
@@ -451,20 +475,14 @@ function readSidebarPos() {
         const clamped = clampPos(p.top, p.left)
         sidePos.top = clamped.top
         sidePos.left = clamped.left
+        sideCustomized.value = true
       }
     }
   } catch (e) { /* ignore */ }
 }
 
-// zoom 变化时重新约束已存储的位置，防止边栏被遮挡
-watch(fontScale, () => {
-  if (sidePos.top != null) {
-    const clamped = clampPos(sidePos.top, sidePos.left)
-    sidePos.top = clamped.top
-    sidePos.left = clamped.left
-    localStorage.setItem(SIDEBAR_KEY, JSON.stringify({ top: sidePos.top, left: sidePos.left }))
-  }
-})
+// 挂载后确定默认位置；页面大小切换时若未自定义则按新倍率重算（视觉尺寸随缩放变化）
+watch(pageScaleRef, () => layoutSidebarDefault())
 
 function onSidebarMousedown(e) {
   // 仅左键触发；排除按钮/链接上的点击
@@ -483,23 +501,20 @@ function onSidebarMousemove(e) {
   if (!_dragStart.moved) {
     _dragStart.moved = true
     sideDragging.value = true
-    // 首次拖动时，如果还是默认位置，先计算当前实际坐标（getBoundingClientRect 返回物理像素，需除以 zoom 转为 CSS 像素）
+    // 首次拖动时，如果还是默认位置，先计算当前实际坐标
     if (sidePos.top == null) {
       const el = document.querySelector('.side-bar')
       const rect = el.getBoundingClientRect()
-      const z = fontScale.value || 1
-      sidePos.top = rect.top / z
-      sidePos.left = rect.left / z
+      sidePos.top = rect.top
+      sidePos.left = rect.left
       _dragStart.x = e.clientX
       _dragStart.y = e.clientY
       return
     }
   }
   const vp = effectiveViewport()
-  const z = fontScale.value || 1
-  // 鼠标 delta 是物理像素，需除以 zoom 转为 CSS 像素增量
-  const newTop = Math.max(0, Math.min(vp.h - 60, sidePos.top + dy / z))
-  const newLeft = Math.max(0, Math.min(vp.w - 76, sidePos.left + dx / z))
+  const newTop = Math.max(0, Math.min(vp.h - 60, sidePos.top + dy))
+  const newLeft = Math.max(0, Math.min(vp.w - 76, sidePos.left + dx))
   sidePos.top = newTop
   sidePos.left = newLeft
   _dragStart.x = e.clientX
@@ -636,8 +651,9 @@ onMounted(() => {
   // 数据动态刷新
   refreshTimer = setInterval(refreshData, 5000)
   document.addEventListener('click', onDocClick)
-  // 恢复边栏拖拽位置
+  // 恢复边栏拖拽位置（无自定义时按默认位置定位）
   readSidebarPos()
+  layoutSidebarDefault()
   const bar = document.querySelector('.side-bar')
   if (bar) bar.addEventListener('mousedown', onSidebarMousedown)
 })
@@ -1360,8 +1376,11 @@ function goDemand() {
 .side-bar {
   position: fixed;
   right: 14px;
-  top: 50%;
-  transform: translateY(-50%);
+  /* 位置由 JS 按视口与缩放倍率计算后写入 inline（fixed 百分比在 #app zoom 下解析异常），此处为 onMounted 前兜底 */
+  top: 0;
+  /* body 下不受 #app zoom 影响，缩放由自身 transform 完成 */
+  transform: scale(var(--app-font-scale, 1));
+  transform-origin: right top;
   z-index: 120;
   display: flex;
   flex-direction: column;

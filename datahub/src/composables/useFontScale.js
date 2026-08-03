@@ -1,13 +1,13 @@
 import { ref } from 'vue'
 
 /**
- * 全局字号调节（可访问性增强）
- * - 四档可选：小 / 标准 / 大 / 特大
- * - 通过根元素 zoom 整体缩放（页面以 px 布局为主，zoom 可无损缩放全部元素）
- * - 选择持久化至 localStorage，刷新/重登后自动恢复
+ * 全局页面大小调节（可访问性增强）
+ * - 三档可选：标准 / 大 / 特大
+ * - 实现机制：#app zoom 整体缩放页面主体（字体/卡片/表格/图表），teleport 到 body 的 Element Plus 弹层
+ *   在 1:1 坐标系中定位、由 global.css 中的 transform: scale 等比放大，两者共用 --app-font-scale 变量
+ * - 选择持久化至 localStorage，刷新/重登后自动恢复（旧版「小」档 0.875 自动回落为标准）
  */
 export const FONT_SCALES = [
-  { key: 'small', label: '小', value: 0.875 },
   { key: 'standard', label: '标准', value: 1 },
   { key: 'large', label: '大', value: 1.125 },
   { key: 'extraLarge', label: '特大', value: 1.25 }
@@ -39,6 +39,8 @@ export function useFontScale() {
     scale.value = v
     localStorage.setItem(STORAGE_KEY, String(v))
     applyScale(v)
+    // zoom 不触发 window resize，主动派发事件让 ECharts 等监听窗口尺寸的组件感知变化重新渲染
+    window.dispatchEvent(new Event('resize'))
   }
   return { scale, scales: FONT_SCALES, setScale }
 }

@@ -264,6 +264,49 @@
             </div>
           </div>
 
+          <!-- 底座情况-各系统资源使用情况 -->
+          <div class="gov-section-bar">
+            <h3 class="ds-section-title" style="margin: 0">各系统资源使用情况</h3>
+            <el-input v-model="sysResKw" placeholder="输入系统名称查询" clearable style="width: 220px" />
+          </div>
+          <el-table :data="pagedSysRes" @sort-change="onSysResSort">
+            <el-table-column type="index" label="序号" width="70" :index="(i) => (sysResPage - 1) * 5 + i + 1" />
+            <el-table-column prop="name" label="系统名称" min-width="180" />
+            <el-table-column prop="cpuCores" label="CPU 核数" min-width="100" sortable="custom">
+              <template #default="{ row }">{{ row.cpuCores }} 核</template>
+            </el-table-column>
+            <el-table-column prop="cpu" label="CPU 使用率" min-width="140" sortable="custom">
+              <template #default="{ row }">
+                <el-progress :percentage="row.cpu" :stroke-width="8" :color="row.cpu >= 80 ? '#f2711c' : '#3a7bd5'" />
+              </template>
+            </el-table-column>
+            <el-table-column prop="memSize" label="内存大小" min-width="100" sortable="custom">
+              <template #default="{ row }">{{ row.memSize }} GB</template>
+            </el-table-column>
+            <el-table-column prop="mem" label="内存使用率" min-width="140" sortable="custom">
+              <template #default="{ row }">
+                <el-progress :percentage="row.mem" :stroke-width="8" :color="row.mem >= 80 ? '#f2711c' : '#3a7bd5'" />
+              </template>
+            </el-table-column>
+            <el-table-column prop="diskSize" label="存储大小" min-width="110" sortable="custom">
+              <template #default="{ row }">{{ row.diskSize.toLocaleString() }} TB</template>
+            </el-table-column>
+            <el-table-column prop="disk" label="存储使用率" min-width="140" sortable="custom">
+              <template #default="{ row }">
+                <el-progress :percentage="row.disk" :stroke-width="8" :color="row.disk >= 80 ? '#f2711c' : '#3a7bd5'" />
+              </template>
+            </el-table-column>
+          </el-table>
+          <div class="ds-pager">
+            <el-pagination
+              v-model:current-page="sysResPage"
+              background
+              layout="prev, pager, next, total"
+              :total="sysResFiltered.length"
+              :page-size="5"
+            />
+          </div>
+
           <!-- 资产情况 -->
           <h3 class="ds-section-title">资产情况</h3>
           <div class="gov-asset-summary">
@@ -304,6 +347,30 @@
             </div>
           </div>
 
+          <!-- 资产情况-各单位资产信息 -->
+          <div class="gov-section-bar">
+            <h3 class="ds-section-title" style="margin: 0">各单位资产信息</h3>
+            <el-input v-model="unitAssetKw" placeholder="输入单位名称查询" clearable style="width: 220px" />
+          </div>
+          <el-table :data="pagedUnitAsset" @sort-change="onUnitAssetSort">
+            <el-table-column type="index" label="序号" width="70" :index="(i) => (unitAssetPage - 1) * 5 + i + 1" />
+            <el-table-column prop="name" label="单位名称" min-width="220" />
+            <el-table-column prop="dbCount" label="数据库总数" min-width="120" sortable="custom" />
+            <el-table-column prop="tableCount" label="数据表总数" min-width="120" sortable="custom" />
+            <el-table-column prop="amount" label="数据总量" min-width="120" sortable="custom">
+              <template #default="{ row }">{{ row.amount }} {{ row.amountUnit }}</template>
+            </el-table-column>
+          </el-table>
+          <div class="ds-pager">
+            <el-pagination
+              v-model:current-page="unitAssetPage"
+              background
+              layout="prev, pager, next, total"
+              :total="unitAssetFiltered.length"
+              :page-size="5"
+            />
+          </div>
+
           <!-- 前置机统计 -->
           <div class="gov-section-bar">
             <h3 class="ds-section-title" style="margin: 0">前置机统计</h3>
@@ -336,19 +403,22 @@
           </div>
 
           <!-- 前置机列表 -->
-          <h3 class="ds-section-title">前置机列表</h3>
-          <el-table :data="pagedFrontMachines">
-            <el-table-column type="index" label="序号" width="70" :index="(i) => (fmListPage - 1) * 10 + i + 1" />
+          <div class="gov-section-bar">
+            <h3 class="ds-section-title" style="margin: 0">前置机列表</h3>
+            <el-input v-model="fmListKw" placeholder="输入所属单位查询" clearable style="width: 220px" />
+          </div>
+          <el-table :data="pagedFrontMachines" @sort-change="onFmListSort">
+            <el-table-column type="index" label="序号" width="70" :index="(i) => (fmListPage - 1) * 5 + i + 1" />
             <el-table-column prop="name" label="前置机名称" min-width="140" />
             <el-table-column prop="ip" label="IP 地址" min-width="140" />
             <el-table-column prop="dept" label="所属单位" min-width="200" />
             <el-table-column prop="usage" label="用途" min-width="110" />
-            <el-table-column label="CPU 使用率" min-width="140">
+            <el-table-column prop="cpu" label="CPU 使用率" min-width="140" sortable="custom">
               <template #default="{ row }">
                 <el-progress :percentage="row.cpu" :stroke-width="8" :color="row.cpu >= 80 ? '#f2711c' : '#3a7bd5'" />
               </template>
             </el-table-column>
-            <el-table-column label="内存使用率" min-width="140">
+            <el-table-column prop="memory" label="内存使用率" min-width="140" sortable="custom">
               <template #default="{ row }">
                 <el-progress :percentage="row.memory" :stroke-width="8" :color="row.memory >= 80 ? '#f2711c' : '#3a7bd5'" />
               </template>
@@ -365,7 +435,7 @@
               background
               layout="prev, pager, next, total"
               :total="fmListFiltered.length"
-              :page-size="10"
+              :page-size="5"
             />
           </div>
         </template>
@@ -622,6 +692,147 @@
         <VChart :option="boardOption" height="330px" />
       </template>
 
+      <!-- 共享开放：统计 + TOP5 + 共享开放清单 -->
+      <template v-else-if="activeBoard === 'shareOpen'">
+        <div class="ds-stats-row">
+          <div class="ds-panel">
+            <div class="ds-panel-head"><span class="ds-panel-title">本单位资源统计</span></div>
+            <div class="ds-metrics">
+              <div v-for="m in wbOrgStats" :key="m.label" class="ds-metric">
+                <p class="ds-metric-label">{{ m.label }}</p>
+                <p class="ds-metric-value">{{ m.value }}<em>{{ m.unit }}</em></p>
+              </div>
+            </div>
+          </div>
+          <div class="ds-panel">
+            <div class="ds-panel-head"><span class="ds-panel-title">共享开放统计</span></div>
+            <div class="ds-metrics">
+              <div v-for="m in wbShareOpenBoard.stats" :key="m.label" class="ds-metric">
+                <p class="ds-metric-label">{{ m.label }}</p>
+                <p class="ds-metric-value">{{ m.value }}<em>{{ m.unit }}</em></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="ds-section-title">共享开放TOP5</h3>
+        <el-table :data="wbShareOpenBoard.top5">
+          <el-table-column type="index" label="序号" width="80" />
+          <el-table-column prop="name" label="数据目录名称" min-width="220" />
+          <el-table-column prop="code" label="数据目录代码" min-width="180" />
+          <el-table-column prop="openType" label="共享/开放类型" min-width="170" />
+          <el-table-column prop="count" label="调用次数" width="110" />
+        </el-table>
+
+        <h3 class="ds-section-title">共享开放清单</h3>
+        <div class="ds-filters">
+          <span class="ds-filter-label">数据目录代码</span>
+          <el-input v-model="soFilter.kw1" placeholder="数据目录代码" clearable style="width: 150px" />
+          <span class="ds-filter-label">数据目录名称</span>
+          <el-input v-model="soFilter.kw2" placeholder="数据目录名称" clearable style="width: 150px" />
+          <span class="ds-filter-label">共享类型</span>
+          <el-select v-model="soFilter.type" style="width: 120px">
+            <el-option label="全部" value="全部" />
+            <el-option label="无条件共享" value="无条件共享" />
+            <el-option label="有条件共享" value="有条件共享" />
+            <el-option label="不共享" value="不共享" />
+          </el-select>
+          <div class="spacer"></div>
+          <el-button type="primary" @click="ElMessage.success('筛选内容已导出')">导出筛选内容</el-button>
+          <el-button type="primary" @click="ElMessage.success('查询完成')"><el-icon style="margin-right: 4px"><Search /></el-icon>查询</el-button>
+          <el-button @click="soReset"><el-icon style="margin-right: 4px"><Refresh /></el-icon>重置</el-button>
+        </div>
+        <el-table :data="pagedShareOpenList">
+          <el-table-column type="index" label="序号" width="64" />
+          <el-table-column prop="code" label="数据目录代码" min-width="160" />
+          <el-table-column prop="name" label="数据目录名称" min-width="200" />
+          <el-table-column prop="items" label="数据项" min-width="250" show-overflow-tooltip />
+          <el-table-column prop="shareType" label="共享类型" min-width="110" />
+          <el-table-column prop="openType" label="开放类型" min-width="110" />
+          <el-table-column label="目录状态" width="100">
+            <template #default="{ row }"><el-tag size="small" type="warning" effect="light">{{ row.pubStatus }}</el-tag></template>
+          </el-table-column>
+          <el-table-column label="挂接状态" width="100">
+            <template #default="{ row }"><el-tag size="small" effect="light">{{ row.linkStatus }}</el-tag></template>
+          </el-table-column>
+          <el-table-column prop="count" label="调用次数" width="100" />
+          <el-table-column label="操作" width="70" align="right">
+            <template #default><el-button link type="primary" @click="ElMessage.info('详情页建设中')">详情</el-button></template>
+          </el-table-column>
+        </el-table>
+        <div class="ds-pager">
+          <el-pagination v-model:current-page="soPage" background layout="prev, pager, next, total" :total="filteredShareOpenList.length" :page-size="10" />
+        </div>
+      </template>
+
+      <!-- 授权运营：统计 + TOP5 + 授权运营清单 -->
+      <template v-else-if="activeBoard === 'authOp'">
+        <div class="ds-stats-row">
+          <div class="ds-panel">
+            <div class="ds-panel-head"><span class="ds-panel-title">本单位资源统计</span></div>
+            <div class="ds-metrics">
+              <div v-for="m in wbOrgStats" :key="m.label" class="ds-metric">
+                <p class="ds-metric-label">{{ m.label }}</p>
+                <p class="ds-metric-value">{{ m.value }}<em>{{ m.unit }}</em></p>
+              </div>
+            </div>
+          </div>
+          <div class="ds-panel">
+            <div class="ds-panel-head"><span class="ds-panel-title">授权运营统计</span></div>
+            <div class="ds-metrics">
+              <div v-for="m in wbAuthOpBoard.stats" :key="m.label" class="ds-metric">
+                <p class="ds-metric-label">{{ m.label }}</p>
+                <p class="ds-metric-value">{{ m.value }}<em>{{ m.unit }}</em></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="ds-section-title">授权运营TOP5</h3>
+        <el-table :data="wbAuthOpBoard.top5">
+          <el-table-column type="index" label="序号" width="80" />
+          <el-table-column prop="name" label="产品名称" min-width="220" />
+          <el-table-column prop="org" label="运营机构" min-width="180" />
+          <el-table-column prop="scene" label="授权场景" min-width="170" />
+          <el-table-column prop="count" label="调用次数" width="110" />
+        </el-table>
+
+        <h3 class="ds-section-title">授权运营清单</h3>
+        <div class="ds-filters">
+          <span class="ds-filter-label">产品名称</span>
+          <el-input v-model="aoFilter.kw1" placeholder="产品名称" clearable style="width: 160px" />
+          <span class="ds-filter-label">运营机构</span>
+          <el-input v-model="aoFilter.kw2" placeholder="运营机构" clearable style="width: 160px" />
+          <span class="ds-filter-label">运营状态</span>
+          <el-select v-model="aoFilter.status" style="width: 120px">
+            <el-option label="全部" value="全部" />
+            <el-option label="运营中" value="运营中" />
+            <el-option label="待续签" value="待续签" />
+            <el-option label="已终止" value="已终止" />
+          </el-select>
+          <div class="spacer"></div>
+          <el-button type="primary" @click="ElMessage.success('筛选内容已导出')">导出筛选内容</el-button>
+          <el-button type="primary" @click="ElMessage.success('查询完成')"><el-icon style="margin-right: 4px"><Search /></el-icon>查询</el-button>
+          <el-button @click="aoReset"><el-icon style="margin-right: 4px"><Refresh /></el-icon>重置</el-button>
+        </div>
+        <el-table :data="pagedAuthOpList">
+          <el-table-column type="index" label="序号" width="64" />
+          <el-table-column prop="authNo" label="授权编号" min-width="150" />
+          <el-table-column prop="name" label="产品名称" min-width="200" />
+          <el-table-column prop="org" label="运营机构" min-width="160" />
+          <el-table-column prop="scene" label="授权场景" min-width="120" />
+          <el-table-column prop="scope" label="数据范围" min-width="220" show-overflow-tooltip />
+          <el-table-column prop="period" label="授权期限" min-width="180" />
+          <el-table-column label="状态" width="100">
+            <template #default="{ row }"><el-tag size="small" :type="row.status === '运营中' ? 'success' : row.status === '待续签' ? 'warning' : 'info'" effect="light">{{ row.status }}</el-tag></template>
+          </el-table-column>
+          <el-table-column prop="count" label="调用次数" width="100" />
+        </el-table>
+        <div class="ds-pager">
+          <el-pagination v-model:current-page="aoPage" background layout="prev, pager, next, total" :total="filteredAuthOpList.length" :page-size="10" />
+        </div>
+      </template>
+
       <!-- 用数情况 / 供数情况：统计 + TOP5 + 清单 -->
       <template v-else>
         <div class="ds-stats-row">
@@ -738,7 +949,7 @@ import CountUp from '@/components/CountUp.vue'
 import VChart from '@/components/VChart.vue'
 import { useUserStore, WORKBENCH_PROFILES } from '@/store/user'
 import { getWorkbenchMenuLeaves } from '@/config/workbenchMenus'
-import { notices, myMessages, unifiedTodos, wbBoard, wbOrgStats, wbUsageBoard, wbSupplyBoard, providerTaskBoards, govAccountStats, govLoginHourly, govLogin30d, govInactiveAccounts, govBaseStats, govAssetSummary, govAssetByBase, govFrontMachines, govFrontMachineList, govChainStats, govChainRates, govCollectStats, govCatalogByCommission, govCatalogByDistrict, govStopFilters, govStopUpdateList } from '@/mock'
+import { notices, myMessages, unifiedTodos, wbBoard, wbOrgStats, wbUsageBoard, wbSupplyBoard, wbShareOpenBoard, wbAuthOpBoard, providerTaskBoards, govAccountStats, govLoginHourly, govLogin30d, govInactiveAccounts, govBaseStats, govAssetSummary, govAssetByBase, govSysResourceList, govUnitAssetList, govFrontMachines, govFrontMachineList, govChainStats, govChainRates, govCollectStats, govCatalogByCommission, govCatalogByDistrict, govStopFilters, govStopUpdateList } from '@/mock'
 
 const route = useRoute()
 const router = useRouter()
@@ -887,6 +1098,8 @@ function viewTodo(row) {
 const boardTabs = [
   { key: 'usage', label: '用数情况' },
   { key: 'supply', label: '供数情况' },
+  { key: 'shareOpen', label: '共享开放' },
+  { key: 'authOp', label: '授权运营' },
   { key: 'fusion', label: '数据融合' }
 ]
 const activeBoard = ref('usage')
@@ -903,6 +1116,48 @@ function dsReset() {
   Object.assign(dsFilter, { kw1: '', kw2: '', type: '全部', status: '全部', month: '' })
   ElMessage.success('筛选条件已重置')
 }
+
+/* 共享开放：统计 + TOP5 + 清单（每页 10 行，目录代码/名称查询 + 共享类型筛选） */
+const soFilter = reactive({ kw1: '', kw2: '', type: '全部' })
+const soPage = ref(1)
+const filteredShareOpenList = computed(() => {
+  const k1 = soFilter.kw1.trim()
+  const k2 = soFilter.kw2.trim()
+  return wbShareOpenBoard.list.filter(
+    (r) =>
+      (!k1 || r.code.includes(k1)) &&
+      (!k2 || r.name.includes(k2)) &&
+      (soFilter.type === '全部' || r.shareType === soFilter.type)
+  )
+})
+const pagedShareOpenList = computed(() => filteredShareOpenList.value.slice((soPage.value - 1) * 10, soPage.value * 10))
+function soReset() {
+  Object.assign(soFilter, { kw1: '', kw2: '', type: '全部' })
+  soPage.value = 1
+  ElMessage.success('筛选条件已重置')
+}
+watch(filteredShareOpenList, () => (soPage.value = 1))
+
+/* 授权运营：统计 + TOP5 + 清单（每页 10 行，产品名称/运营机构查询 + 运营状态筛选） */
+const aoFilter = reactive({ kw1: '', kw2: '', status: '全部' })
+const aoPage = ref(1)
+const filteredAuthOpList = computed(() => {
+  const k1 = aoFilter.kw1.trim()
+  const k2 = aoFilter.kw2.trim()
+  return wbAuthOpBoard.list.filter(
+    (r) =>
+      (!k1 || r.name.includes(k1)) &&
+      (!k2 || r.org.includes(k2)) &&
+      (aoFilter.status === '全部' || r.status === aoFilter.status)
+  )
+})
+const pagedAuthOpList = computed(() => filteredAuthOpList.value.slice((aoPage.value - 1) * 10, aoPage.value * 10))
+function aoReset() {
+  Object.assign(aoFilter, { kw1: '', kw2: '', status: '全部' })
+  aoPage.value = 1
+  ElMessage.success('筛选条件已重置')
+}
+watch(filteredAuthOpList, () => (aoPage.value = 1))
 
 const boardOption = computed(() => ({
   grid: { left: 50, right: 24, top: 30, bottom: 40 },
@@ -1043,13 +1298,62 @@ const inactivePage = ref(1)
 const pagedInactive = computed(() => filteredInactive.value.slice((inactivePage.value - 1) * 10, inactivePage.value * 10))
 watch(filteredInactive, () => (inactivePage.value = 1))
 
-/* 前置机列表分页（每页 10 条，跟随单位筛选） */
+/* 前置机列表分页（每页 5 条：所属单位查询 + CPU/内存使用率排序，与上方单位筛选叠加） */
+const fmListKw = ref('')
 const fmListPage = ref(1)
-const fmListFiltered = computed(() =>
-  fmDept.value === '全部' ? govFrontMachineList : govFrontMachineList.filter((f) => f.dept === fmDept.value)
-)
-const pagedFrontMachines = computed(() => fmListFiltered.value.slice((fmListPage.value - 1) * 10, fmListPage.value * 10))
+const fmListSort = ref({ prop: '', order: '' })
+const fmListFiltered = computed(() => {
+  const kw = fmListKw.value.trim()
+  let list = govFrontMachineList.filter(
+    (f) => (fmDept.value === '全部' || f.dept === fmDept.value) && (!kw || f.dept.includes(kw))
+  )
+  const { prop, order } = fmListSort.value
+  if (prop && order) list = [...list].sort((a, b) => (order === 'ascending' ? a[prop] - b[prop] : b[prop] - a[prop]))
+  return list
+})
+const pagedFrontMachines = computed(() => fmListFiltered.value.slice((fmListPage.value - 1) * 5, fmListPage.value * 5))
+function onFmListSort({ prop, order }) {
+  fmListSort.value = { prop, order }
+  fmListPage.value = 1
+}
 watch(fmDept, () => (fmListPage.value = 1))
+watch(fmListKw, () => (fmListPage.value = 1))
+
+/* 底座情况-各系统资源使用情况（每页 5 行：系统名称查询 + CPU/内存/存储大小及使用率排序） */
+const sysResKw = ref('')
+const sysResPage = ref(1)
+const sysResSort = ref({ prop: '', order: '' })
+const sysResFiltered = computed(() => {
+  const kw = sysResKw.value.trim()
+  let list = govSysResourceList.filter((s) => !kw || s.name.includes(kw))
+  const { prop, order } = sysResSort.value
+  if (prop && order) list = [...list].sort((a, b) => (order === 'ascending' ? a[prop] - b[prop] : b[prop] - a[prop]))
+  return list
+})
+const pagedSysRes = computed(() => sysResFiltered.value.slice((sysResPage.value - 1) * 5, sysResPage.value * 5))
+function onSysResSort({ prop, order }) {
+  sysResSort.value = { prop, order }
+  sysResPage.value = 1
+}
+watch(sysResKw, () => (sysResPage.value = 1))
+
+/* 资产情况-各单位资产信息（每页 5 行：单位名称查询 + 数据库/数据表/数据总量排序） */
+const unitAssetKw = ref('')
+const unitAssetPage = ref(1)
+const unitAssetSort = ref({ prop: '', order: '' })
+const unitAssetFiltered = computed(() => {
+  const kw = unitAssetKw.value.trim()
+  let list = govUnitAssetList.filter((u) => !kw || u.name.includes(kw))
+  const { prop, order } = unitAssetSort.value
+  if (prop && order) list = [...list].sort((a, b) => (order === 'ascending' ? a[prop] - b[prop] : b[prop] - a[prop]))
+  return list
+})
+const pagedUnitAsset = computed(() => unitAssetFiltered.value.slice((unitAssetPage.value - 1) * 5, unitAssetPage.value * 5))
+function onUnitAssetSort({ prop, order }) {
+  unitAssetSort.value = { prop, order }
+  unitAssetPage.value = 1
+}
+watch(unitAssetKw, () => (unitAssetPage.value = 1))
 
 /* 数据目录-委办/区排行 */
 const rankCommission = ref('')

@@ -7,12 +7,12 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import App from './App.vue'
 import router from './router'
 import './styles/global.css'
-import { initFontScale } from './composables/useFontScale'
 import { initTheme } from './composables/useTheme'
+import { initFontScale } from './composables/useFontScale'
 
-// 启动时恢复用户持久化的全局字号与主题
-initFontScale()
+// 启动时恢复用户持久化的主题与页面大小（首帧由 index.html 内联脚本先行应用，此处保证单页内状态一致）
 initTheme()
+initFontScale()
 
 const app = createApp(App)
 

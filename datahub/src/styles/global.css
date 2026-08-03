@@ -77,12 +77,15 @@
   --el-color-primary-light-8: #c3d3ea;
   --el-color-primary-light-9: var(--color-brand-tint);
   --el-color-primary-dark-2: var(--color-brand-strong);
+
+  /* —— 页面大小默认档（标准 1；大 1.125；特大 1.25，由 useFontScale 写入） —— */
+  --app-font-scale: 1;
 }
 
-/* 全局字号缩放：小 0.875 / 标准 1 / 大 1.125 / 特大 1.25，由 useFontScale 写入 */
-html { zoom: var(--app-font-scale, 1); }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* 页面大小：缩放作用域限定在 #app（登录后页面主体），避免影响 teleport 到 body 的 fixed 弹层定位坐标系；登录页由组件内逻辑固定为 1 */
+#app { zoom: var(--app-font-scale, 1); }
 
 html, body, #app { height: 100%; }
 
@@ -199,6 +202,34 @@ html.no-scrollbar body::-webkit-scrollbar { width: 0; height: 0; display: none; 
 }
 /* 鼠标点击不显示 outline，仅键盘导航时可见 */
 :focus:not(:focus-visible) { outline: none; }
+
+/* ============ 页面大小：body 下弹层的等比缩放 ============
+ * teleport 到 body 的 Element Plus 弹层（下拉/弹框/抽屉/消息等）位于 1:1 坐标系，
+ * 若随 #app zoom 会破坏 fixed/absolute 定位（坐标被整体放大导致移出视口），
+ * 故通过 transform: scale 等比放大，transform-origin 按锚定边/中心调整避免超出视口 */
+body .el-popper {
+  transform: scale(var(--app-font-scale, 1)) !important;
+  transform-origin: left top !important;
+}
+body .el-popper[data-popper-placement*='-end'] { transform-origin: right top !important; }
+body .el-popper[data-popper-placement^='left'] { transform-origin: left top !important; }
+body .el-popper[data-popper-placement^='left'][data-popper-placement*='-end'] { transform-origin: left bottom !important; }
+body .el-popper[data-popper-placement^='right'] { transform-origin: right top !important; }
+body .el-popper[data-popper-placement^='right'][data-popper-placement*='-end'] { transform-origin: right bottom !important; }
+body .el-popper[data-popper-placement^='top'] { transform-origin: left bottom !important; }
+body .el-popper[data-popper-placement^='top'][data-popper-placement*='-end'] { transform-origin: right bottom !important; }
+body .el-popper[data-popper-placement='bottom'] { transform-origin: center top !important; }
+body .el-popper[data-popper-placement='top'] { transform-origin: center bottom !important; }
+body .el-popper[data-popper-placement='left'] { transform-origin: left center !important; }
+body .el-popper[data-popper-placement='right'] { transform-origin: right center !important; }
+body .el-dialog,
+body .el-message-box { transform: scale(var(--app-font-scale, 1)) !important; transform-origin: center !important; }
+body .el-drawer { transform: scale(var(--app-font-scale, 1)) !important; transform-origin: right top !important; }
+body .el-message.is-center { transform: translate(-50%) scale(var(--app-font-scale, 1)) !important; transform-origin: center !important; }
+body .el-message.is-left,
+body .el-message.is-right { transform: scale(var(--app-font-scale, 1)) !important; transform-origin: left top !important; }
+body .el-notification { transform: scale(var(--app-font-scale, 1)) !important; transform-origin: right top !important; }
+body .el-loading-mask.is-fullscreen { transform: scale(var(--app-font-scale, 1)) !important; transform-origin: center !important; }
 
 /* Element Plus 局部微调 */
 .el-table th.el-table__cell {

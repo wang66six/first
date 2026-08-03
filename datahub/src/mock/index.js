@@ -469,6 +469,72 @@ export const wbSupplyBoard = {
   ]
 }
 
+// 看板-共享开放：统计 + TOP5 + 共享开放清单
+ export const wbShareOpenBoard = {
+  stats: [
+    { label: '共享目录数', value: 126, unit: '个' },
+    { label: '开放目录数', value: 58, unit: '个' },
+    { label: '当日共享调用', value: 1286435, unit: '次' },
+    { label: '当日开放调用', value: 386210, unit: '次' },
+    { label: '共享申请数', value: 96, unit: '个' },
+    { label: '开放授权数', value: 42, unit: '个' }
+  ],
+  top5: [
+    { name: '企业基本信息查询', code: '002421001/000041', openType: '无条件共享', count: 1248 },
+    { name: '个人社保缴费记录', code: '002421001/000042', openType: '有条件共享', count: 986 },
+    { name: '交通违章处理信息', code: '002421001/000043', openType: '无条件共享', count: 875 },
+    { name: '医疗机构执业许可', code: '002421001/000044', openType: '社会开放', count: 762 },
+    { name: '房屋产权登记信息', code: '002421001/000045', openType: '有条件共享', count: 631 }
+  ],
+  list: [
+    { code: '002421001/000041', name: '企业基本信息查询', items: '企业名称,统一社会信用代码,注册地址,法定代表人', shareType: '无条件共享', openType: '无条件开放', pubStatus: '已发布', linkStatus: '已挂接', count: 1248 },
+    { code: '002421001/000042', name: '个人社保缴费记录', items: '姓名,证件号码,缴费基数,缴费状态', shareType: '有条件共享', openType: '脱敏开放', pubStatus: '已发布', linkStatus: '已挂接', count: 986 },
+    { code: '002421001/000043', name: '交通违章处理信息', items: '车牌号,违章时间,违章地点,处罚决定', shareType: '无条件共享', openType: '无条件开放', pubStatus: '已发布', linkStatus: '已挂接', count: 875 },
+    { code: '002421001/000044', name: '医疗机构执业许可', items: '机构名称,许可证号,执业范围,有效期', shareType: '无条件共享', openType: '社会开放', pubStatus: '已发布', linkStatus: '未挂接', count: 762 },
+    { code: '002421001/000045', name: '房屋产权登记信息', items: '产权证号,坐落,面积,产权人', shareType: '有条件共享', openType: '不开放', pubStatus: '已发布', linkStatus: '已挂接', count: 631 },
+    { code: '002421001/000046', name: '养老人员信息表', items: '姓名,身份证号,居住地址,补贴状态', shareType: '有条件共享', openType: '脱敏开放', pubStatus: '已发布', linkStatus: '已挂接', count: 587 },
+    { code: '002421001/000047', name: '低保对象动态名单', items: '姓名,保障类别,发放金额,变更记录', shareType: '不共享', openType: '不开放', pubStatus: '未发布', linkStatus: '未挂接', count: 0 },
+    { code: '002421001/000048', name: '食品经营许可信息', items: '经营者名称,许可证号,经营项目,有效期', shareType: '无条件共享', openType: '无条件开放', pubStatus: '已发布', linkStatus: '已挂接', count: 523 },
+    { code: '002421001/000049', name: '公共场所卫生许可', items: '单位名称,卫生许可号,复核日期', shareType: '无条件共享', openType: '社会开放', pubStatus: '已发布', linkStatus: '已挂接', count: 448 },
+    { code: '002421001/000050', name: '职业培训补贴发放', items: '培训机构,学员姓名,补贴金额,发放日期', shareType: '有条件共享', openType: '脱敏开放', pubStatus: '已发布', linkStatus: '已挂接', count: 396 },
+    { code: '002421001/000051', name: '人才引进落户名单', items: '姓名,单位,落户批次,审批日期', shareType: '不共享', openType: '不开放', pubStatus: '未发布', linkStatus: '未挂接', count: 0 },
+    { code: '002421001/000052', name: '河道水质监测数据', items: '监测点,监测时间,水质指标,评价等级', shareType: '无条件共享', openType: '无条件开放', pubStatus: '已发布', linkStatus: '已挂接', count: 355 }
+  ]
+}
+
+// 看板-授权运营：统计 + TOP5 + 授权运营清单
+ export const wbAuthOpBoard = {
+  stats: [
+    { label: '授权运营产品', value: 152, unit: '个' },
+    { label: '合作运营机构', value: 12, unit: '家' },
+    { label: '授权场景数', value: 36, unit: '个' },
+    { label: '累计调用次数', value: 52847, unit: '次' },
+    { label: '本月成交额', value: 2864, unit: '万元' },
+    { label: '数据返还量', value: 96, unit: 'TB' }
+  ],
+  top5: [
+    { name: '普惠金融风控数据包', org: '上海XX银行', scene: '信贷风控', count: 1286 },
+    { name: '交通出行指数', org: '上海XX出行科技', scene: '智慧出行', count: 986 },
+    { name: '区域经济运行监测', org: '上海XX咨询', scene: '宏观经济分析', count: 875 },
+    { name: '医疗资源分布分析', org: '上海XX健康', scene: '医疗健康服务', count: 762 },
+    { name: '企业信用报告', org: '上海XX征信', scene: '信用评估', count: 631 }
+  ],
+  list: [
+    { authNo: 'OP20260701001', name: '普惠金融风控数据包', org: '上海XX银行', scene: '信贷风控', scope: '企业工商、司法、税务等12类数据', period: '2026-07-01 ~ 2027-06-30', status: '运营中', count: 1286 },
+    { authNo: 'OP20260615002', name: '交通出行指数', org: '上海XX出行科技', scene: '智慧出行', scope: '公交、地铁、道路卡口等8类数据', period: '2026-06-15 ~ 2027-06-14', status: '运营中', count: 986 },
+    { authNo: 'OP20260520003', name: '区域经济运行监测', org: '上海XX咨询', scene: '宏观经济分析', scope: '税务、用电、用工等6类数据', period: '2026-05-20 ~ 2027-05-19', status: '运营中', count: 875 },
+    { authNo: 'OP20260410004', name: '医疗资源分布分析', org: '上海XX健康', scene: '医疗健康服务', scope: '医疗机构、床位、医师资源等5类数据', period: '2026-04-10 ~ 2027-04-09', status: '运营中', count: 762 },
+    { authNo: 'OP20260301005', name: '企业信用报告', org: '上海XX征信', scene: '信用评估', scope: '企业公共信用信息', period: '2026-03-01 ~ 2027-02-28', status: '运营中', count: 631 },
+    { authNo: 'OP20260120006', name: '自然人基础信息核验', org: '上海XX科技', scene: '身份核验', scope: '姓名、身份证号一致性核验接口', period: '2026-01-20 ~ 2026-12-31', status: '运营中', count: 587 },
+    { authNo: 'OP20251201007', name: '城市停车诱导数据', org: '上海XX泊车', scene: '停车服务', scope: '停车场位、诱导屏等4类数据', period: '2025-12-01 ~ 2026-11-30', status: '待续签', count: 448 },
+    { authNo: 'OP20251015008', name: '食品安全追溯数据', org: '上海XX溯源', scene: '食品溯源', scope: '食品经营许可、抽检结果等5类数据', period: '2025-10-15 ~ 2026-10-14', status: '已终止', count: 326 },
+    { authNo: 'OP20250820009', name: '养老服务机构信息', org: '上海XX养老', scene: '养老服务', scope: '养老机构、床位、护理人员等4类数据', period: '2025-08-20 ~ 2026-08-19', status: '运营中', count: 298 },
+    { authNo: 'OP20250630010', name: '环境质量监测数据', org: '上海XX环境', scene: '环境服务', scope: '空气质量、水质、噪声等6类数据', period: '2025-06-30 ~ 2026-06-29', status: '已终止', count: 254 },
+    { authNo: 'OP20250512011', name: '体育场馆运营数据', org: '上海XX体育', scene: '体育服务', scope: '场馆预约、赛事活动等3类数据', period: '2025-05-12 ~ 2026-05-11', status: '待续签', count: 212 },
+    { authNo: 'OP20250301012', name: '文旅客流分析数据', org: '上海XX文旅', scene: '文旅服务', scope: '景区客流、酒店入住等5类数据', period: '2025-03-01 ~ 2026-02-28', status: '运营中', count: 186 }
+  ]
+}
+
 /* ---------- 治理部工作台首页看板：账号统计 / 资源情况 / 数据目录 / 运维监控 ---------- */
 // 账号数据统计
 export const govAccountStats = [
@@ -527,6 +593,34 @@ export const govAssetByBase = [
   { name: '联通（阿里）', tag: '底座 1', dbCount: '52', dbAdd: '3', tableCount: '4,128', tableAdd: '105', storage: '665', storageUnit: 'TB', storageAdd: '28 TB' },
   { name: '电信（华为）', tag: '底座 2', dbCount: '64', dbAdd: '3', tableCount: '5,263', tableAdd: '142', storage: '982', storageUnit: 'TB', storageAdd: '41 TB' },
   { name: '移动（星环）', tag: '底座 3', dbCount: '40', dbAdd: '2', tableCount: '3,067', tableAdd: '79', storage: '1213', storageUnit: 'TB', storageAdd: '35 TB' }
+]
+
+// 底座情况-各系统资源使用情况（CPU/内存/存储的大小与使用率）
+export const govSysResourceList = [
+  { name: '目录链管理子系统', cpuCores: 32, cpu: 42, memSize: 256, mem: 73, diskSize: 1024, disk: 65 },
+  { name: '运营管理子系统', cpuCores: 16, cpu: 68, memSize: 128, mem: 56, diskSize: 512, disk: 48 },
+  { name: '统一资源管理子系统', cpuCores: 48, cpu: 51, memSize: 384, mem: 82, diskSize: 2048, disk: 71 },
+  { name: '数据共享交换子系统', cpuCores: 64, cpu: 76, memSize: 512, mem: 88, diskSize: 4096, disk: 83 },
+  { name: '数据开放服务子系统', cpuCores: 24, cpu: 35, memSize: 192, mem: 44, diskSize: 768, disk: 39 },
+  { name: '智能合约管理子系统', cpuCores: 16, cpu: 22, memSize: 96, mem: 31, diskSize: 256, disk: 26 },
+  { name: '统一身份认证子系统', cpuCores: 8, cpu: 47, memSize: 64, mem: 52, diskSize: 128, disk: 44 },
+  { name: '数据归集子系统', cpuCores: 32, cpu: 59, memSize: 256, mem: 61, diskSize: 1536, disk: 57 },
+  { name: '统一服务总线子系统', cpuCores: 24, cpu: 64, memSize: 192, mem: 69, diskSize: 512, disk: 52 },
+  { name: '安全控制子系统', cpuCores: 16, cpu: 28, memSize: 128, mem: 36, diskSize: 384, disk: 33 }
+]
+
+// 资产情况-各单位资产信息（数据库/数据表/数据总量）
+export const govUnitAssetList = [
+  { name: '市公安局', dbCount: 18, tableCount: 1246, amount: 2.4, amountUnit: 'PB' },
+  { name: '市规划资源局', dbCount: 15, tableCount: 1098, amount: 1.9, amountUnit: 'PB' },
+  { name: '市卫生健康委', dbCount: 22, tableCount: 1876, amount: 3.6, amountUnit: 'PB' },
+  { name: '市市场监管局', dbCount: 12, tableCount: 964, amount: 1.2, amountUnit: 'PB' },
+  { name: '市交通委', dbCount: 16, tableCount: 1132, amount: 2.1, amountUnit: 'PB' },
+  { name: '市民政局', dbCount: 8, tableCount: 486, amount: 0.6, amountUnit: 'PB' },
+  { name: '市教卫工作党委、市教委', dbCount: 14, tableCount: 1213, amount: 2.8, amountUnit: 'PB' },
+  { name: '市水务局', dbCount: 9, tableCount: 532, amount: 0.8, amountUnit: 'PB' },
+  { name: '市统计局', dbCount: 7, tableCount: 398, amount: 0.4, amountUnit: 'PB' },
+  { name: '市医疗保障局', dbCount: 11, tableCount: 726, amount: 1.1, amountUnit: 'PB' }
 ]
 
 // 前置机统计（支持按单位筛选）

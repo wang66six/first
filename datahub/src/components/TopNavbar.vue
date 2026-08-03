@@ -32,7 +32,7 @@
       </el-dropdown>
       <span v-else-if="user.workbenches.length === 1" class="nav-drop" @click="goWorkbench(user.workbenches[0].path)">工作台</span>
 
-      <!-- 用户下拉：右对齐，避免高倍字号下右侧溢出 -->
+      <!-- 用户下拉：右对齐，避免菜单超出视口右侧 -->
       <el-dropdown placement="bottom-end" @command="onCommand">
         <div class="user-box">
           <el-avatar :size="30" class="user-avatar">{{ user.name.slice(0, 1) }}</el-avatar>
@@ -41,20 +41,6 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item disabled>{{ user.roleLabel }}</el-dropdown-item>
-            <!-- 字号调节：小/标准/大/特大四档，点击不关闭下拉 -->
-            <li class="fs-row" @click.stop>
-              <span class="fs-label">字号</span>
-              <div class="fs-opts">
-                <button
-                  v-for="s in fontScales"
-                  :key="s.key"
-                  class="fs-btn"
-                  :class="{ active: s.value === fontScale }"
-                  :title="`全局字号：${s.label}`"
-                  @click="setFontScale(s.value)"
-                >{{ s.label }}</button>
-              </div>
-            </li>
             <!-- 主题切换：浅色/深色/高对比 -->
             <li class="fs-row" @click.stop>
               <span class="fs-label">主题</span>
@@ -69,6 +55,20 @@
                 >{{ t.label }}</button>
               </div>
             </li>
+            <!-- 页面大小切换：标准/大/特大（整体等比缩放） -->
+            <li class="fs-row" @click.stop>
+              <span class="fs-label">页面大小</span>
+              <div class="fs-opts">
+                <button
+                  v-for="s in scaleList"
+                  :key="s.key"
+                  class="fs-btn"
+                  :class="{ active: s.value === currentScale }"
+                  :title="`切换页面大小：${s.label}`"
+                  @click="setScale(s.value)"
+                >{{ s.label }}</button>
+              </div>
+            </li>
             <el-dropdown-item command="logout" divided>退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -81,15 +81,15 @@
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useUserStore } from '@/store/user'
-import { useFontScale } from '@/composables/useFontScale'
 import { useTheme } from '@/composables/useTheme'
+import { useFontScale } from '@/composables/useFontScale'
 import logoImg from '@/assets/logo.png'
 
 const router = useRouter()
 const route = useRoute()
 const user = useUserStore()
-const { scale: fontScale, scales: fontScales, setScale: setFontScale } = useFontScale()
 const { theme: currentTheme, themes: themeList, setTheme } = useTheme()
+const { scale: currentScale, scales: scaleList, setScale } = useFontScale()
 
 const menus = [
   { label: '首页', path: '/home' },
@@ -191,7 +191,7 @@ function onCommand(cmd) {
 .user-box { display: flex; align-items: center; gap: 6px; cursor: pointer; color: #fff; outline: none; }
 .user-avatar { background: var(--gov-gold); font-weight: 700; flex-shrink: 0; }
 
-/* 字号调节行（用户下拉内） */
+/* 调节行（用户下拉内） */
 .fs-row {
   display: flex;
   align-items: center;
