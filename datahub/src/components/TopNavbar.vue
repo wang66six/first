@@ -19,9 +19,9 @@
 
     <!-- 右侧功能区 -->
     <div class="nav-actions">
-      <!-- 工作台入口：单角色直达，多角色下拉选择 -->
-      <el-dropdown v-if="user.workbenches.length > 1" @command="goWorkbench">
-        <span class="nav-drop">
+      <!-- 工作台入口：单角色直达，多角色悬停下拉选择；popper offset 归 0 使菜单紧贴触发器，避免悬停空隙导致菜单抖动无法选中 -->
+      <el-dropdown v-if="user.workbenches.length > 1" trigger="hover" :popper-options="wbPopperOptions" @command="goWorkbench">
+        <span class="nav-drop" role="button">
           工作台<el-icon class="drop-arrow"><ArrowDown /></el-icon>
         </span>
         <template #dropdown>
@@ -98,6 +98,9 @@ const menus = [
   { label: '智能合约', path: '/zone/smart-contract' }
 ]
 
+// 工作台下拉 popper 配置：偏移归 0 使菜单紧贴触发器底边，鼠标可无缝移入菜单（默认 12px 空隙会丢失悬停导致菜单抖动）
+const wbPopperOptions = { modifiers: [{ name: 'offset', options: { offset: [0, 0] } }] }
+
 function isActive(m) {
   return m.path && (m.path === '/home' ? route.path === '/home' : route.path.startsWith(m.path))
 }
@@ -172,12 +175,17 @@ function onCommand(cmd) {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  /* 加大触发热区，避免小字号下悬停/点击脱靶 */
+  height: 32px;
+  padding: 0 6px;
   color: rgba(255, 255, 255, 0.88);
   font-size: 14px;
   cursor: pointer;
   outline: none;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
 }
-.nav-drop:hover { color: #fff; }
+.nav-drop:hover { color: #fff; background: rgba(255, 255, 255, 0.12); }
 .drop-arrow { font-size: 12px; }
 
 .user-box { display: flex; align-items: center; gap: 6px; cursor: pointer; color: #fff; outline: none; }

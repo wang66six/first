@@ -3,11 +3,11 @@
 //
 // 不同工作台按 wb 标识隐藏部分菜单（治理部为管理侧，展示全部）：
 // - commission 委办 / district 区：隐藏运营管理、组织/权限管理、智能运维等治理侧能力
-// - provider 服务商（开发工作台）：隐藏数据编目/共享/开放、供需对接、统一身份等消费侧能力
+// - provider 服务商（开发工作台）：隐藏数据编目/共享/开放、需求对接、统一身份等消费侧能力
 const HIDDEN_MENUS = {
   commission: ['运营管理', '组织管理', '权限管理', '智能运维', '统一元数据管理', '数据编织', '统一资源管理', '流程引擎', '创新应用', '数据直达', '统一服务总线', '安全控制中心'],
   district: ['运营管理', '组织管理', '权限管理', '智能运维', '统一元数据管理', '数据编织', '统一资源管理', '流程引擎', '创新应用', '数据直达', '统一服务总线', '安全控制中心'],
-  provider: ['数据编目', '数据共享', '数据开放', '供需对接', '统一身份', '智能运维', '统一元数据管理', '数据编织', '统一资源管理', '流程引擎', '前置机管理', '安全控制中心']
+  provider: ['数据编目', '数据共享', '数据开放', '需求对接', '统一身份', '智能运维', '统一元数据管理', '数据编织', '统一资源管理', '流程引擎', '前置机管理', '安全控制中心']
 }
 
 // 按工作台过滤菜单：命中隐藏名单的顶层项/子项一并剔除，子项被清空的父项与被清空的分组同样移除
@@ -30,7 +30,7 @@ export function getWorkbenchMenuGroups(b, wb) {
   const groups = [
     {
       items: [
-        { label: '首页', icon: 'HomeFilled', path: b },
+        { label: '工作台首页', icon: 'HomeFilled', path: b },
         { label: '统一待办', icon: 'Document', path: `${b}/todo` },
         { label: '我的收藏', icon: 'Star', path: `${b}/favorites` }
       ]
@@ -49,7 +49,7 @@ export function getWorkbenchMenuGroups(b, wb) {
       title: '运营中心',
       collapsible: true,
       items: [
-        { label: '供需对接', icon: 'Switch', path: `${b}/supply-demand` },
+        { label: '需求对接', icon: 'Switch', path: `${b}/supply-demand` },
         { label: '运营管理', icon: 'SetUp', children: [
           { label: '服务目录管理', path: `${b}/operation/service-order` },
           { label: '三单管理', path: `${b}/operation/demand-order` },

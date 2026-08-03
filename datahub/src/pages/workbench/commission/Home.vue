@@ -769,7 +769,7 @@ const nowText = new Date().toLocaleString('zh-CN', {
 
 /* ---------- 快捷操作（固定 4 个，支持从左侧菜单自定义） ---------- */
 // 默认偏好顺序：按此优先取用，命中当前工作台可见菜单者才生效
-const QUICK_DEFAULT_PREFS = ['统一待办', '供需对接', '数据编目', '智能运维']
+const QUICK_DEFAULT_PREFS = ['统一待办', '需求对接', '数据编目', '智能运维']
 // 图标底色按位次循环取用
 const QUICK_PALETTE = [
   { bg: '#fff3e5', color: '#f2711c' },

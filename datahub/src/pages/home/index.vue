@@ -23,10 +23,9 @@
               @focus="openPanel"
               @keyup.enter="doSearch()"
             />
-            <button class="search-btn" @click="doSearch()">搜索</button>
-            <div class="ai-btn" title="AI 智能找数" @click="doSearch(true)">
-              <el-icon><MagicStick /></el-icon>
-            </div>
+            <button class="search-btn" @click="doSearch()">
+              <el-icon class="search-btn-icon"><Search /></el-icon>搜索
+            </button>
           </div>
 
           <!-- 搜索历史 + 猜你感兴趣 弹层 -->
@@ -669,10 +668,10 @@ function applyProduct(p) {
 }
 
 function goDemand() {
-  // 进入当前用户主工作台的需求提交页；无工作台角色则回个人工作台
+  // 进入当前用户主工作台的需求对接页；无工作台角色则回个人工作台
   const wb = user.workbenches[0]
   if (wb) {
-    router.push(`${wb.path}/demand`)
+    router.push(`${wb.path}/supply-demand`)
   } else {
     router.push(`/workbench/${user.roles[0] || 'governance'}/todo`)
   }
@@ -802,24 +801,13 @@ function goDemand() {
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
   transition: opacity 0.2s;
 }
 .search-btn:hover { opacity: 0.9; }
-.ai-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #7c5cd9, #2563c9);
-  color: #fff;
-  font-size: 17px;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: transform 0.2s;
-}
-.ai-btn:hover { transform: scale(1.08); }
+.search-btn-icon { margin-right: 6px; font-size: 15px; }
 
 /* ---------- 搜索历史 + 猜你感兴趣 弹层 ---------- */
 .search-panel {

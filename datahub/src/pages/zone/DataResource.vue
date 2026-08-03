@@ -131,7 +131,6 @@
               <div class="item-head">
                 <el-icon class="head-icon"><InfoFilled /></el-icon>
                 <a class="catalog-link" @click="$router.push(`/zone/data-resource/${row.id}`)">{{ row.name }}</a>
-                <el-tag size="small" effect="plain" type="info">{{ row.tag }}</el-tag>
                 <span class="meta-cell head-meta"><el-icon><OfficeBuilding /></el-icon>所属单位：<b>{{ row.dept }}</b></span>
                 <span class="meta-cell head-meta"><el-icon><Monitor /></el-icon>所属系统：<b>{{ sysOf(row) }}</b></span>
                 <span class="res-code">目录编码：{{ row.code }}</span>
@@ -247,18 +246,26 @@ watch(() => route.query, (q) => {
 const deptKw = ref('')
 const deptTreeRef = ref()
 
+// 部门计数随当前筛选条件联动（排除部门自身维度，分面统计）
 const deptCountMap = computed(() => {
   const map = {}
-  catalogs.forEach((c) => { map[c.dept] = (map[c.dept] || 0) + 1 })
+  catalogs.forEach((c) => {
+    if (!matchFilters(c, 'dept')) return
+    map[c.dept] = (map[c.dept] || 0) + 1
+  })
   return map
 })
 
-// 递归构建组织树节点：叶子取目录数，分组节点向下汇总
+// 递归构建组织树节点：叶子取目录数，分组节点向下汇总；
+// 筛选时仅保留有结果（count > 0）的部门，已选中的部门始终保留便于取消
 function buildTreeNode(node) {
   if (!node.children) {
-    return { id: node.label, label: node.label, isLeaf: true, count: deptCountMap.value[node.label] || 0 }
+    const count = deptCountMap.value[node.label] || 0
+    if (count === 0 && filters.value.dept !== node.label) return null
+    return { id: node.label, label: node.label, isLeaf: true, count }
   }
-  const children = node.children.map(buildTreeNode)
+  const children = node.children.map(buildTreeNode).filter(Boolean)
+  if (!children.length) return null
   return {
     id: `g-${node.label}`,
     label: node.label,
@@ -268,7 +275,7 @@ function buildTreeNode(node) {
   }
 }
 
-const deptTree = computed(() => deptOrgTree.map(buildTreeNode))
+const deptTree = computed(() => deptOrgTree.map(buildTreeNode).filter(Boolean))
 // 默认展开市政府、各区两个并列分组
 const expandedKeys = ['g-市政府', 'g-各区']
 
@@ -314,7 +321,7 @@ const dimFieldMap = Object.fromEntries(advDims.map((d) => [d.key, d.field]))
 function matchFilters(c, excludeKey) {
   const f = filters.value
   const range = f.stars !== null ? starRange(f.stars) : null
-  if (f.dept && c.dept !== f.dept) return false
+  if (excludeKey !== 'dept' && f.dept && c.dept !== f.dept) return false
   if (range && !(c.score >= range[0] && c.score < range[1])) return false
   if (f.topic && c.topic !== f.topic) return false
   if (f.kw && !c.name.includes(f.kw) && !c.code.includes(f.kw)) return false

@@ -11,7 +11,7 @@
         <p class="slogan-sub">数据驱动决策 · 智慧赋能治理</p>
 
         <div class="ability-grid">
-          <div class="ability-card ability-card--primary">
+          <div class="ability-card">
             <h3>统一底座</h3>
             <p>实现跨平台、多底座的统一数据管理和服务，提供统一管理的多样化数据工具</p>
           </div>
@@ -281,6 +281,8 @@ onBeforeUnmount(() => {
   gap: 22px;
 }
 .ability-card {
+  position: relative;
+  overflow: hidden;
   padding: 20px 22px;
   border-radius: 10px;
   background: rgba(90, 122, 170, 0.38);
@@ -289,12 +291,19 @@ onBeforeUnmount(() => {
   border: 1px solid rgba(255, 255, 255, 0.14);
   transition: transform 0.25s, box-shadow 0.25s;
 }
-.ability-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(10, 35, 80, 0.25); }
-.ability-card--primary {
+/* 鼠标移入浮现的蓝色渐变层：四张卡片统一效果，opacity 过渡保证渐变平滑淡入淡出 */
+.ability-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
   background: linear-gradient(120deg, rgba(64, 128, 235, 0.92), rgba(96, 110, 225, 0.78));
+  opacity: 0;
+  transition: opacity 0.25s;
 }
-.ability-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 10px; letter-spacing: 1px; }
-.ability-card p { font-size: 13px; line-height: 1.8; color: rgba(255, 255, 255, 0.88); }
+.ability-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(10, 35, 80, 0.25); }
+.ability-card:hover::before { opacity: 1; }
+.ability-card h3 { position: relative; z-index: 1; font-size: 17px; font-weight: 700; margin-bottom: 10px; letter-spacing: 1px; }
+.ability-card p { position: relative; z-index: 1; font-size: 13px; line-height: 1.8; color: rgba(255, 255, 255, 0.88); }
 
 /* ---------- 右侧登录卡片 ---------- */
 .auth-card {

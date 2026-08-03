@@ -26,7 +26,7 @@ function makeWorkbenchRoute({ key, name, roles }) {
       { path: '', name: `${key}-home`, component: () => import('@/pages/workbench/commission/Home.vue'), meta: { title: name } },
       { path: 'todo', name: `${key}-todo`, component: () => import('@/pages/workbench/commission/UnifiedTodo.vue'), meta: { title: '统一待办' } },
       { path: 'favorites', name: `${key}-favorites`, component: () => import('@/pages/workbench/personal/MyCart.vue'), meta: { title: '我的收藏' } },
-      { path: 'supply-demand', name: `${key}-supply-demand`, component: () => import('@/pages/workbench/commission/DemandConnect.vue'), meta: { title: '供需对接' } },
+      { path: 'supply-demand', name: `${key}-supply-demand`, component: () => import('@/pages/workbench/commission/DemandConnect.vue'), meta: { title: '需求对接' } },
       // 运营管理子菜单
       { path: 'operation/service-order', name: `${key}-op-service-order`, component: () => import('@/pages/workbench/commission/FeaturePlaceholder.vue'), meta: { title: '服务目录管理', pending: true } },
       { path: 'operation/demand-order', name: `${key}-op-demand-order`, component: () => import('@/pages/workbench/commission/FeaturePlaceholder.vue'), meta: { title: '三单管理', pending: true } },
@@ -57,7 +57,6 @@ function makeWorkbenchRoute({ key, name, roles }) {
       { path: 'authorized-operation', name: `${key}-authorized-operation`, component: () => import('@/pages/workbench/commission/FeaturePlaceholder.vue'), meta: { title: '授权运营' } },
       // 兼容既有跳转链接的旧路径
       { path: 'tickets', name: `${key}-tickets`, component: () => import('@/pages/workbench/commission/Tickets.vue'), meta: { title: '工单管理' } },
-      { path: 'demand', name: `${key}-demand`, component: () => import('@/pages/workbench/commission/DemandSubmit.vue'), meta: { title: '需求提交' } },
       { path: 'supply-demand-stats', name: `${key}-supply-demand-stats`, component: () => import('@/pages/workbench/commission/SupplyDemandStats.vue'), meta: { title: '供需统计' } },
       { path: 'whitelist', name: `${key}-whitelist`, component: () => import('@/pages/workbench/commission/Whitelist.vue'), meta: { title: '白名单管理' } },
       { path: 'api-manage', name: `${key}-api-manage`, component: () => import('@/pages/workbench/commission/ApiManage.vue'), meta: { title: '接口管理' } },

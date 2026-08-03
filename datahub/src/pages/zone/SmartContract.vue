@@ -158,18 +158,26 @@ const deptKw = ref('')
 const deptTreeRef = ref()
 const activeDept = ref('')
 
+// 部门计数随当前筛选条件联动（排除部门自身维度，分面统计）
 const deptCountMap = computed(() => {
   const map = {}
-  contracts.value.forEach((c) => { map[c.dept] = (map[c.dept] || 0) + 1 })
+  contracts.value.forEach((c) => {
+    if (!matchContract(c, 'dept')) return
+    map[c.dept] = (map[c.dept] || 0) + 1
+  })
   return map
 })
 
-// 递归构建组织树节点：叶子取合约数，分组节点向下汇总
+// 递归构建组织树节点：叶子取合约数，分组节点向下汇总；
+// 筛选时仅保留有结果（count > 0）的部门，已选中的部门始终保留便于取消
 function buildTreeNode(node) {
   if (!node.children) {
-    return { id: node.label, label: node.label, isLeaf: true, count: deptCountMap.value[node.label] || 0 }
+    const count = deptCountMap.value[node.label] || 0
+    if (count === 0 && activeDept.value !== node.label) return null
+    return { id: node.label, label: node.label, isLeaf: true, count }
   }
-  const children = node.children.map(buildTreeNode)
+  const children = node.children.map(buildTreeNode).filter(Boolean)
+  if (!children.length) return null
   return {
     id: `g-${node.label}`,
     label: node.label,
@@ -179,7 +187,7 @@ function buildTreeNode(node) {
   }
 }
 
-const deptTree = computed(() => deptOrgTree.map(buildTreeNode))
+const deptTree = computed(() => deptOrgTree.map(buildTreeNode).filter(Boolean))
 // 默认展开市政府、各区两个并列分组
 const expandedKeys = ['g-市政府', 'g-各区']
 
@@ -204,13 +212,13 @@ function toggleDelivery(name) {
 }
 
 /* ---------- 合约过滤 ---------- */
-// excludeDelivery：统计交付方式计数时排除自身维度（分面统计）
-function matchContract(c, excludeDelivery) {
+// excludeKey：统计某维度计数时排除该维度自身筛选（分面统计），'dept' / 'delivery'
+function matchContract(c, excludeKey) {
   if (kw.value && !c.name.includes(kw.value)) return false
   if (filterType.value && c.type !== filterType.value) return false
   if (filterStatus.value && c.status !== filterStatus.value) return false
-  if (activeDept.value && c.dept !== activeDept.value) return false
-  if (!excludeDelivery && activeDelivery.value && c.delivery !== activeDelivery.value) return false
+  if (excludeKey !== 'dept' && activeDept.value && c.dept !== activeDept.value) return false
+  if (excludeKey !== 'delivery' && activeDelivery.value && c.delivery !== activeDelivery.value) return false
   return true
 }
 
@@ -219,7 +227,7 @@ const filtered = computed(() => contracts.value.filter((c) => matchContract(c)))
 const deliveryBuckets = computed(() =>
   DELIVERIES.map((name) => ({
     name,
-    count: contracts.value.filter((c) => matchContract(c, true) && c.delivery === name).length
+    count: contracts.value.filter((c) => matchContract(c, 'delivery') && c.delivery === name).length
   }))
 )
 
