@@ -24,6 +24,7 @@ function makeWorkbenchRoute({ key, name, roles }) {
     meta: { roles, workbench: key, wbName: name },
     children: [
       { path: '', name: `${key}-home`, component: () => import('@/pages/workbench/commission/Home.vue'), meta: { title: name } },
+      { path: 'messages', name: `${key}-messages`, component: () => import('@/pages/workbench/commission/UnifiedMessages.vue'), meta: { title: '统一消息' } },
       { path: 'todo', name: `${key}-todo`, component: () => import('@/pages/workbench/commission/UnifiedTodo.vue'), meta: { title: '统一待办' } },
       { path: 'favorites', name: `${key}-favorites`, component: () => import('@/pages/workbench/personal/MyCart.vue'), meta: { title: '我的收藏' } },
       { path: 'supply-demand', name: `${key}-supply-demand`, component: () => import('@/pages/workbench/commission/DemandConnect.vue'), meta: { title: '需求对接' } },

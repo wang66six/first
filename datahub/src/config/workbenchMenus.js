@@ -31,6 +31,7 @@ export function getWorkbenchMenuGroups(b, wb) {
     {
       items: [
         { label: '工作台首页', icon: 'HomeFilled', path: b },
+        { label: '统一消息', icon: 'Message', path: `${b}/messages` },
         { label: '统一待办', icon: 'Document', path: `${b}/todo` },
         { label: '我的收藏', icon: 'Star', path: `${b}/favorites` }
       ]
