@@ -1000,3 +1000,38 @@ export const providerTaskBoards = {
   clean: { label: '清洗任务', list: genProviderTasks('QX', '数据清洗', 28) },
   share: { label: '共享任务', list: genProviderTasks('GX', '数据共享', 22) }
 }
+
+/* ---------- 高质量供给单位：供数 / 用数 TOP5 单位（本年度次数，单位：亿次） ---------- */
+export const supplyUnits = [
+  { name: '市场监管局', count: 12.74 },
+  { name: '发改委', count: 9.63 },
+  { name: '公安局', count: 7.86 },
+  { name: '大数据中心', count: 5.42 },
+  { name: '民政局', count: 3.17 }
+]
+
+export const useUnits = [
+  { name: '金融监管局', count: 15.32 },
+  { name: '医保局', count: 11.64 },
+  { name: '教育局', count: 8.97 },
+  { name: '卫健委', count: 6.41 },
+  { name: '交通委', count: 4.28 }
+]
+
+/* ---------- 数据供给成效：质量指标 + 高频使用目录 ---------- */
+export const supplyEffectiveness = {
+  catalogTotal: { value: 33452, unit: '个', growth: 8.2 },
+  lakeDataTotal: { value: 1286.45, unit: '亿条', growth: 5.6 },
+  dailyUpdate: { value: 1260, unit: '个', percent: 3.8 },
+  realtimeUpdate: { value: 486, unit: '个', percent: 1.5 },
+  catalogRate: 78.6, // 数据目录汇聚覆盖率（%）
+  lakeRate: 64.2 // 入湖完成度（%）
+}
+
+export const hotCatalogs = [
+  { name: '企业登记基础信息', count: 4521.6 },
+  { name: '社保参保记录', count: 3820.4 },
+  { name: '不动产权籍数据', count: 2957.8 },
+  { name: '医保报销明细', count: 2213.5 },
+  { name: '车辆道路行驶信息', count: 1689.2 }
+]
